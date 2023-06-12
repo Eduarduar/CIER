@@ -2,9 +2,13 @@
 
     session_start();
 
+    include '../db/consultas.php';
+
     if (!isset($_SESSION['eCodeUsuario']) and !isset($_SESSION['tNombreUsuario'])){
         header('location: ./login');
     }
+
+    $consulta = new consultas();
 
 ?>
 <!DOCTYPE html>
@@ -30,46 +34,85 @@
             
             <div class="container-publicador">
 
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">añadir publicación</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-publicar">añadir publicación</button>
 
             </div>
 
             <div class="container-publicaciones">
 
-                <div class="container-publicacion">
+                <?php
+                
+                    $publicaciones = $consulta->consultar("SELECT p.eCodePublicaciones, u.tNombreUsuarios, p.tMensajePublicaciones, p.tImgPublicaciones, p.tPdfPublicaciones, p.fCreatePublicaciones, tp.tNombreTipoPublicaciones
+                    FROM publicaciones p
+                    JOIN usuarios u ON p.eUserPublicaciones = u.eCodeUsuarios
+                    JOIN tipopublicaciones tp ON p.eTipoPublicaciones = tp.eCodeTipoPublicaciones
+                    GROUP BY p.eCodePublicaciones DESC
+                    ");
+                    if ($publicaciones->rowCount()){
+                        foreach($publicaciones as $publicacion){
+                            
+                            ?>
+                            
+                            <div class="container-publicacion">
 
-                    <div class="container-publicacion_header">
+                                <div class="container-publicacion_header">
 
-                        <span class="publicacion_user">Eduarduar</span>
+                                    <span class="publicacion_user"><?php echo $publicacion['tNombreUsuarios'] . ' - ' . $publicacion['tNombreTipoPublicaciones']; ?></span>
 
-                        <span class="publicacion_fecha">11/06/2023 12:00</span>
+                                    <span class="publicacion_fecha"><?php echo $publicacion['fCreatePublicaciones']; ?></span>
 
-                    </div>
+                                </div>
 
-                    <div class="container-publicacion_main">
+                                <div class="container-publicacion_main">
 
-                        <div class="publicacion_text"><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus quaerat laborum distinctio tempore optio ipsam. Excepturi laudantium id, doloribus voluptas eum labore inventore reprehenderit animi aperiam asperiores earum est sit.</p></div>
+                                    <div class="publicacion_text"><p><?php echo $publicacion['tMensajePublicaciones'];?></p></div>
 
-                        <div class="publicacion_img"><img src="../img/fondo1.jpg" alt=""></div>
+                                    <?php
+                                    
+                                        if ($publicacion['tImgPublicaciones'] != NULL){
 
-                        <div class="publicacion_pdf">
-                            <button>
-                                <span class="icon-pdf material-symbols-outlined">picture_as_pdf</span>
-                                <span>ver pdf adjunto</span>
-                            </button>
-                        </div>
+                                            ?>
+                                            
+                                                <div class="publicacion_img"><img src="<?php echo $publicacion['tImgPublicaciones'];?>"></div>
+                                            
+                                            <?php
 
-                    </div>
+                                        }
 
-                     <!-- solo moderador y admin -->
+                                        if ($publicacion['tPdfPublicaciones'] != NULL){
+                                            ?>
+                                                
+                                                <div class="publicacion_pdf">
+                                                    <button>
+                                                        <span class="icon-pdf material-symbols-outlined">picture_as_pdf</span>
+                                                        <span>ver pdf adjunto</span>
+                                                    </button>
+                                                </div>
+                                            
+                                            <?php
+                                        }
+                                    
+                                    ?>
 
-                    <div class="container-publicacion_footer">
+                                </div>
 
-                        <span class="publicacion_eliminar fa fa-times" aria-hidden="true"> Eliminar</span>
+                                <!-- solo moderador y admin -->
 
-                    </div>
+                                <div class="container-publicacion_footer">
 
-                </div>
+                                    <span class="publicacion_eliminar fa fa-times" id="<?php echo $publicacion['eCodePublicaciones'];?>" aria-hidden="true"> Eliminar</span>
+
+                                </div>
+
+                            </div>
+
+                            
+                            <?php
+
+                        }
+                    }
+                
+                ?>
 
             </div>
 
@@ -77,7 +120,7 @@
 
     </main>
 
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="modal-publicar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -89,13 +132,23 @@
                         <label for="publicador-text">texto:</label>
                         <textarea class="publicador-text" id="publicador-text" oninput="autoResize()"></textarea>
 
+                        
+                        <label for="tipo_publicacion" class="form-label">Tipo de publicacion</label>
+                        <select class="form-select" id="tipo_publicacion" aria-label=".form-select-lg">
+                            <option value="1" selected>Publicación</option>
+                            <option value="2">Dibulgación</option>
+                            <option value="3">Reporte Técnico</option>
+                            <option value="4">Congreso</option>
+                            <option value="5">Convenio</option>
+                        </select>
+
                         <div class="container-media">
                             
                             <input type="file" class="pdf form-control" accept="application/pdf">
 
                             <div class="container-file">
                                 <p class="text-file" id="text-file" ><span class="material-symbols-outlined">image</span></p>
-                                <input type="file" class="media form-control" name="media" id="media" onchange="" accept="image/*">
+                                <input type="file" class="media form-control" name="media" id="media" accept="image/*">
                             </div>
 
                             <div class="vista">
@@ -112,6 +165,8 @@
                 </div>
             </div>
         </div>
+
+        
     
     <div class="modal-container" id="modal-container"></div>
     <script>
