@@ -32,7 +32,7 @@
             return $this->connect()->query("".$consulta."");
         }
 
-        public function insertar($consulta){
+        public function consultarConfirmar($consulta){
             $this->connect()->query("".$consulta."");
             return true;
         }
@@ -59,7 +59,22 @@
 
     // Comprobar si se realizó una solicitud POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Verificar la existencia de los datos esperados en la solicitud
+
+        // Verificar la existencia de los datos esperados en la solicitud para eliminar una publicación
+        if (isset($_POST['eliminar']) and isset($_POST['id_user'])){
+            $publicacion = $_POST['eliminar'];
+            $id_user = $_POST['id_user'];
+            $publicacion = $consulta->consultarConfirmar("UPDATE publicaciones SET bEstadoPublicaciones = 0, eUpdatePublicaciones = $id_user, fUpdatePublicaciones = CURRENT_TIMESTAMP WHERE eCodePublicaciones = $publicacion");
+            if (!$publicacion){
+                $resp = array('code' => '1', 'message' => 'algo a salido mal al intentar eliminar la publicación');
+            }else{
+                $resp = array('code' => '0', 'message' => 'publicación eliminada exitosamente');
+                
+            }
+            echo json_encode($resp);
+        }
+
+        // Verificar la existencia de los datos esperados en la solicitud para insertar una publicación
         if (isset($_POST['text']) AND isset($_POST['tipo'])) {
             $text = $_POST['text'];
             $id_user = $_POST['id_user'];
@@ -130,9 +145,11 @@
                     $code = '1';
                 }
             }
+
+            
             
             // Insertar la información de la publicación en la base de datos
-            if (!$consulta->insertar("INSERT INTO publicaciones VALUES (NULL, $id_user, '$text', '$destino_img', '$destino_pdf', $tipo, CURRENT_TIMESTAMP, NULL, NULL, 1);")) {
+            if (!$consulta->consultarConfirmar("INSERT INTO publicaciones VALUES (NULL, $id_user, '$text', '$destino_img', '$destino_pdf', $tipo, CURRENT_TIMESTAMP, NULL, NULL, 1);")) {
                 if ($mensaje == 'Operacion exitosa'){
                     $mensaje = 'Error al subir la imagen';
                 }else{

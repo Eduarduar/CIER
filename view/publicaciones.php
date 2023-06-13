@@ -46,6 +46,7 @@
                     FROM publicaciones p
                     JOIN usuarios u ON p.eUserPublicaciones = u.eCodeUsuarios
                     JOIN tipopublicaciones tp ON p.eTipoPublicaciones = tp.eCodeTipoPublicaciones
+                    WHERE p.bEstadoPublicaciones = 1
                     GROUP BY p.eCodePublicaciones DESC
                     ");
                     if ($publicaciones->rowCount()){
@@ -83,9 +84,9 @@
                                             ?>
                                                 
                                                 <div class="publicacion_pdf">
-                                                    <button>
-                                                        <span class="icon-pdf material-symbols-outlined">picture_as_pdf</span>
-                                                        <span>ver pdf adjunto</span>
+                                                    <button  data-bs-toggle="modal" data-bs-target="#modal-pdf" data-pdf="<?php echo $publicacion['tPdfPublicaciones']; ?>">
+                                                        <span class="icon-pdf material-symbols-outlined"  data-pdf="<?php echo $publicacion['tPdfPublicaciones']; ?>">picture_as_pdf</span>
+                                                        <span data-pdf="<?php echo $publicacion['tPdfPublicaciones']; ?>">ver pdf adjunto</span>
                                                     </button>
                                                 </div>
                                             
@@ -100,7 +101,7 @@
 
                                 <div class="container-publicacion_footer">
 
-                                    <span class="publicacion_eliminar fa fa-times" id="<?php echo $publicacion['eCodePublicaciones'];?>" aria-hidden="true"> Eliminar</span>
+                                    <span class="publicacion_eliminar fa fa-times" data-eliminar="<?php echo $publicacion['eCodePublicaciones'];?>" aria-hidden="true"> Eliminar</span>
 
                                 </div>
 
@@ -120,51 +121,63 @@
 
     </main>
 
-        <div class="modal fade" id="modal-publicar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Publicación</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
+    <div class="modal fade" id="modal-publicar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Publicación</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    
+                    <textarea class="publicador-text" id="publicador-text" oninput="autoResize()"></textarea>
+
+                    
+                    <label for="tipo_publicacion" class="form-label">Tipo de publicacion</label>
+                    <select class="form-select" id="tipo_publicacion" aria-label=".form-select-lg">
+                        <option value="1" selected>Publicación</option>
+                        <option value="2">Dibulgación</option>
+                        <option value="3">Reporte Técnico</option>
+                        <option value="4">Congreso</option>
+                        <option value="5">Convenio</option>
+                    </select>
+
+                    <div class="container-media">
                         
-                        <label for="publicador-text">texto:</label>
-                        <textarea class="publicador-text" id="publicador-text" oninput="autoResize()"></textarea>
+                        <p class="text-pdf" id="text-pdf"><span class="material-symbols-outlined">picture_as_pdf</span>
+                        <input type="file" class="pdf form-control" accept="application/pdf"></p>
 
-                        
-                        <label for="tipo_publicacion" class="form-label">Tipo de publicacion</label>
-                        <select class="form-select" id="tipo_publicacion" aria-label=".form-select-lg">
-                            <option value="1" selected>Publicación</option>
-                            <option value="2">Dibulgación</option>
-                            <option value="3">Reporte Técnico</option>
-                            <option value="4">Congreso</option>
-                            <option value="5">Convenio</option>
-                        </select>
+                        <p class="text-file" id="text-file" ><span class="material-symbols-outlined">image</span>
+                        <input type="file" class="media form-control" name="media" id="media" accept="image/*"></p>
 
-                        <div class="container-media">
-                            
-                            <input type="file" class="pdf form-control" accept="application/pdf">
-
-                            <div class="container-file">
-                                <p class="text-file" id="text-file" ><span class="material-symbols-outlined">image</span></p>
-                                <input type="file" class="media form-control" name="media" id="media" accept="image/*">
-                            </div>
-
-                            <div class="vista">
-
-                                <img src="" alt="" id="img-foto" class="img-foto">
-
-                            </div>
-                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" id="btn-publicar" class="btn btn-primary">Publicar</button>
+                    
+                    <div class="vista">
+
+                        <img src="" id="img-view" class="img-view">
+
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="btn-publicar" class="btn btn-primary">Publicar</button>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="modal fade modal-dialog modal-xl" id="modal-pdf" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="pdfPreview" src="" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
 
         
     
@@ -176,6 +189,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/header.js"></script>
     <script src="../js/publicaciones.js"></script>
+    <script>
+        activarModalImg()
+    </script>
+    
     
     
 </body>

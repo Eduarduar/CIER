@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-06-2023 a las 09:31:01
+-- Tiempo de generación: 13-06-2023 a las 04:33:39
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -35,11 +35,34 @@ CREATE TABLE `publicaciones` (
   `tMensajePublicaciones` varchar(1000) NOT NULL,
   `tImgPublicaciones` varchar(100) DEFAULT NULL,
   `tPdfPublicaciones` varchar(100) DEFAULT NULL,
+  `eTipoPublicaciones` int(11) NOT NULL,
   `fCreatePublicaciones` date NOT NULL DEFAULT current_timestamp(),
   `fUpdatePublicaciones` date DEFAULT current_timestamp(),
   `eUpdatePublicaciones` int(11) DEFAULT current_timestamp(),
   `bEstadoPublicaciones` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tipopublicaciones`
+--
+
+CREATE TABLE `tipopublicaciones` (
+  `eCodeTipoPublicaciones` int(11) NOT NULL,
+  `tNombreTipoPublicaciones` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `tipopublicaciones`
+--
+
+INSERT INTO `tipopublicaciones` (`eCodeTipoPublicaciones`, `tNombreTipoPublicaciones`) VALUES
+(1, 'Publicacion'),
+(2, 'Divulgación'),
+(3, 'Reporte Técnico '),
+(4, 'Congreso'),
+(5, 'Convenio');
 
 -- --------------------------------------------------------
 
@@ -74,7 +97,14 @@ INSERT INTO `usuarios` (`eCodeUsuarios`, `tNombreUsuarios`, `tNumControlUsuarios
 ALTER TABLE `publicaciones`
   ADD PRIMARY KEY (`eCodePublicaciones`),
   ADD KEY `eUserPublicaciones` (`eUserPublicaciones`),
-  ADD KEY `eUpdatePublicaciones` (`eUpdatePublicaciones`);
+  ADD KEY `eUpdatePublicaciones` (`eUpdatePublicaciones`),
+  ADD KEY `eTipoPublicaciones` (`eTipoPublicaciones`);
+
+--
+-- Indices de la tabla `tipopublicaciones`
+--
+ALTER TABLE `tipopublicaciones`
+  ADD PRIMARY KEY (`eCodeTipoPublicaciones`);
 
 --
 -- Indices de la tabla `usuarios`
@@ -90,7 +120,13 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `publicaciones`
 --
 ALTER TABLE `publicaciones`
-  MODIFY `eCodePublicaciones` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `eCodePublicaciones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+
+--
+-- AUTO_INCREMENT de la tabla `tipopublicaciones`
+--
+ALTER TABLE `tipopublicaciones`
+  MODIFY `eCodeTipoPublicaciones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
@@ -107,7 +143,8 @@ ALTER TABLE `usuarios`
 --
 ALTER TABLE `publicaciones`
   ADD CONSTRAINT `publicaciones_ibfk_1` FOREIGN KEY (`eUserPublicaciones`) REFERENCES `usuarios` (`eCodeUsuarios`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `publicaciones_ibfk_2` FOREIGN KEY (`eUpdatePublicaciones`) REFERENCES `usuarios` (`eCodeUsuarios`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `publicaciones_ibfk_2` FOREIGN KEY (`eUpdatePublicaciones`) REFERENCES `usuarios` (`eCodeUsuarios`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `publicaciones_ibfk_3` FOREIGN KEY (`eTipoPublicaciones`) REFERENCES `tipopublicaciones` (`eCodeTipoPublicaciones`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
