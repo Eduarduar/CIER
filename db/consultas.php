@@ -57,10 +57,48 @@
         return $carpeta . $nuevoNombre;
     }
 
+    // consultas de lapagina publicaciones ------------------------------------------------------------------------------------------------------------
+
     // Comprobar si se realizó una solicitud POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        // Verificar la existencia de los datos esperados en la solicitud para eliminar una publicación
+        if (isset($_POST['publicaciones'])){
+            if ($_POST['publicaciones'] === 'eliminadas' || $_POST['publicaciones'] === 'publicadas' ){
+                $tipo = $_POST['publicaciones'] === 'eliminadas' ? 0 : 1;
+                $publicaciones = $consulta->consultar("SELECT p.eCodePublicaciones, u.tNombreUsuarios, p.tMensajePublicaciones, p.tImgPublicaciones, p.tPdfPublicaciones, t.tNombreTipoPublicaciones, p.fCreatePublicaciones, p.fUpdatePublicaciones, u2.tNombreUsuarios AS tNombreUsuariosUpdate
+                FROM publicaciones p
+                INNER JOIN usuarios u ON p.eUserPublicaciones = u.eCodeUsuarios
+                INNER JOIN tipopublicaciones t ON p.eTipoPublicaciones = t.eCodeTipoPublicaciones
+                LEFT JOIN usuarios u2 ON p.eUpdatePublicaciones = u2.eCodeUsuarios
+                WHERE p.bEstadoPublicaciones = $tipo
+                ORDER BY
+                p.eCodePublicaciones DESC;");
+
+                if ($publicaciones->rowCount()){
+                    $datos = array();
+                    foreach($publicaciones as $publicacion){
+                        $datos[] = [
+                            'publicacion'   => $publicacion['eCodePublicaciones'],
+                            'usuario'       => $publicacion['tNombreUsuarios'],
+                            'tipo'          => $publicacion['tNombreTipoPublicaciones'],
+                            'text'          => $publicacion['tMensajePublicaciones'],
+                            'img'           => $publicacion['tImgPublicaciones'],
+                            'pdf'           => $publicacion['tPdfPublicaciones'],
+                            'create'        => $publicacion['fCreatePublicaciones'],
+                            'update'        => $publicacion['fUpdatePublicaciones'],
+                            'nameUpdate'    => $publicacion['tNombreUsuariosUpdate'],
+                            'consulta'      => $_POST['publicaciones']
+                        ];
+                    }
+                    $resp = array('code' => '0', 'menssaje' => 'operación exitosa', 'datos' => $datos);
+                }else{
+                    $resp = array('code' => '1', 'menssaje' => 'Algo salio mal');
+                }
+                echo json_encode($resp);
+            }
+        }
+
+        // Verificar la existencia de los datos esperados en la solicitud para **** desactivar una publicación ****
         if (isset($_POST['eliminar']) and isset($_POST['id_user'])){
             $publicacion = $_POST['eliminar'];
             $id_user = $_POST['id_user'];
@@ -74,7 +112,7 @@
             echo json_encode($resp);
         }
 
-        // Verificar la existencia de los datos esperados en la solicitud para insertar una publicación
+        // Verificar la existencia de los datos esperados en la solicitud para **** insertar una publicación ****
         if (isset($_POST['text']) AND isset($_POST['tipo'])) {
             $text = $_POST['text'];
             $id_user = $_POST['id_user'];
@@ -158,22 +196,15 @@
                 $code = '1';
             }
             
-            $publicacion = $consulta->consultar("SELECT
-                publicaciones.eCodePublicaciones,
-                usuarios.tNombreUsuarios,
-                publicaciones.tMensajePublicaciones,
-                publicaciones.tImgPublicaciones,
-                publicaciones.tPdfPublicaciones,
-                publicaciones.fCreatePublicaciones,
-                tipopublicaciones.tNombreTipoPublicaciones
-                FROM
-                publicaciones, usuarios, tipopublicaciones
-                WHERE
-                publicaciones.eUserPublicaciones = usuarios.eCodeUsuarios
-                AND publicaciones.eTipoPublicaciones = tipopublicaciones.eCodeTipoPublicaciones
-                ORDER BY
-                publicaciones.eCodePublicaciones DESC
-                LIMIT 1;");
+            $publicacion = $consulta->consultar("SELECT p.eCodePublicaciones, u.tNombreUsuarios, p.tMensajePublicaciones, p.tImgPublicaciones, p.tPdfPublicaciones, t.tNombreTipoPublicaciones, p.fCreatePublicaciones, p.fUpdatePublicaciones, u2.tNombreUsuarios AS tNombreUsuariosUpdate
+            FROM publicaciones p
+            INNER JOIN usuarios u ON p.eUserPublicaciones = u.eCodeUsuarios
+            INNER JOIN tipopublicaciones t ON p.eTipoPublicaciones = t.eCodeTipoPublicaciones
+            LEFT JOIN usuarios u2 ON p.eUpdatePublicaciones = u2.eCodeUsuarios
+            WHERE p.bEstadoPublicaciones = 1
+            ORDER BY
+            p.eCodePublicaciones DESC
+            LIMIT 1;");
             if ($publicacion->rowCount()){
                 foreach($publicacion as $info){
                     $datos = [
@@ -183,7 +214,10 @@
                         'text'          => $info['tMensajePublicaciones'],
                         'img'           => $info['tImgPublicaciones'],
                         'pdf'           => $info['tPdfPublicaciones'],
-                        'create'        => $info['fCreatePublicaciones']
+                        'create'        => $info['fCreatePublicaciones'],
+                        'update'        => $info['fUpdatePublicaciones'],
+                        'nameUpdate'    => $info['tNombreUsuariosUpdate'],
+                        'consulta'      => 'publicadas'
                     ];
                 }
             }
@@ -195,4 +229,5 @@
             
     }
 
+    // consulta de la pagina de usuarios ------------------------------------------------------------------------------------------------------------
 ?>
