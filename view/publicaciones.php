@@ -35,6 +35,7 @@
             <div class="container-publicador">
 
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-publicar">añadir publicación</button>
+                <button type="button" class="btn btn-outline-danger">publicaciones eliminadas</button>
 
             </div>
 

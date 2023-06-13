@@ -261,12 +261,20 @@ const nuevaPublicacion = function (datos){
 
   const user = document.createElement('span');
   user.className = 'publicacion_user';
+  if (datos.consulta === 'eliminadas'){
+  user.textContent = `${datos.usuario} - ${datos.tipo} [Eliminada por ${datos.nameUpdate}]`;
+  }else{
   user.textContent = `${datos.usuario} - ${datos.tipo}`;
+  }
   header.appendChild(user);
 
   const fecha = document.createElement('span');
   fecha.className = 'publicacion_fecha';
-  fecha.textContent = datos.create;
+  if (datos.consulta === 'eliminadas'){
+    fecha.textContent = `${datos.create} - Eliminada[${datos.update}]`;
+  }else{
+    fecha.textContent = `${datos.create}`;
+  }
   header.appendChild(fecha);
 
   publicacion.appendChild(header);
@@ -334,3 +342,72 @@ btn_cerrarModal.addEventListener('click', () => {
   img_view.src = ''; 
 });
 
+const showPublicacionesPublicadas = (e) => {
+  const containerPublicaciones = document.querySelector('.container-publicaciones');
+  $.ajax({
+    url: '../db/consultas.php',
+    type: 'POST',
+    dataType: 'json',
+    data: {
+      publicaciones: 'publicadas'
+    },
+    success: function (respuesta) {
+      if (respuesta.code === '0') {
+        containerPublicaciones.innerHTML = '';
+        respuesta.datos.forEach((element) => {nuevaPublicacion(element)});
+        let boton = document.querySelector('.container-publicador button.btn-outline-success');
+        let boton2 = document.querySelector('.container-publicador button.btn-primary');
+        boton2.removeAttribute('disabled');
+        boton.innerHTML = 'publicaciones eliminadas';
+        boton.classList.add('btn-outline-danger');
+        boton.addEventListener('click', showPublicacionesEliminadas);
+        boton.removeEventListener('click', showPublicacionesPublicadas);
+        boton.classList.remove('btn-outline-success');
+      } else {
+        // La operación en el servidor no fue exitosa
+        alert(respuesta.menssaje);
+      }
+    },
+    error: function (error) {
+      // Manejar errores en la solicitud AJAX
+      console.log('Error en la solicitud AJAX:', error);
+    }
+  });
+}
+
+const showPublicacionesEliminadas = (e) => {
+  document.querySelector('.container-publicador button.btn-outline-danger').addEventListener('click', (e) => {
+    const containerPublicaciones = document.querySelector('.container-publicaciones');
+    $.ajax({
+      url: '../db/consultas.php',
+      type: 'POST',
+      dataType: 'json', // Agrega esta línea para indicar que esperas una respuesta JSON
+      data: {
+        publicaciones: 'eliminadas'
+      },
+      success: function (respuesta) {
+        if (respuesta.code === '0') {
+          containerPublicaciones.innerHTML = '';
+          respuesta.datos.forEach((element) => {nuevaPublicacion(element)});
+          let boton = document.querySelector('.container-publicador button.btn-outline-danger');
+          let boton2 = document.querySelector('.container-publicador button.btn-primary');
+          boton2.setAttribute('disabled', 'true');
+          boton.innerHTML = 'publicaciones'
+          boton.classList.add('btn-outline-success')
+          boton.addEventListener('click', showPublicacionesPublicadas);
+          boton.removeEventListener('click', showPublicacionesEliminadas);
+          boton.classList.remove('btn-outline-danger');
+        } else {
+          // La operación en el servidor no fue exitosa
+          alert(respuesta.menssaje); // Corrige "menssaje" a "mensaje"
+        }
+      },
+      error: function (error) {
+        // Manejar errores en la solicitud AJAX
+        console.log('Error en la solicitud AJAX:', error);
+      }
+    });
+  })
+}
+
+document.querySelector('.container-publicador button.btn-outline-danger').addEventListener('click', showPublicacionesEliminadas());
