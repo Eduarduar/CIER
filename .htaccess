@@ -1,4 +1,4 @@
-ErrorDocument 404 http://localhost/Programacion/aplications/CRM_CIER/view/index
+ErrorDocument 404 http://192.168.1.67/Programacion/aplications/CRM_CIER/view/index
 
 RewriteEngine on
 
