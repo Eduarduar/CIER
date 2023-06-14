@@ -69,7 +69,11 @@
 
         if (isset($_POST['publicaciones'])){
             if ($_POST['publicaciones'] === 'eliminadas' || $_POST['publicaciones'] === 'publicadas' ){
-                $tipo = $_POST['publicaciones'] === 'eliminadas' ? 0 : 1;
+                if ($_POST['publicaciones'] === 'publicadas'){
+                    $tipo = 1;
+                }else{
+                    $tipo = 0;
+                }
                 $publicaciones = $consulta->consultar("SELECT p.eCodePublicaciones, u.tNombreUsuarios, p.tMensajePublicaciones, p.tImgPublicaciones, p.tPdfPublicaciones, t.tNombreTipoPublicaciones, p.fCreatePublicaciones, p.fUpdatePublicaciones, u2.tNombreUsuarios AS tNombreUsuariosUpdate
                 FROM publicaciones p
                 INNER JOIN usuarios u ON p.eUserPublicaciones = u.eCodeUsuarios
@@ -96,8 +100,12 @@
                         ];
                     }
                     $resp = array('code' => '0', 'menssaje' => 'operación exitosa', 'datos' => $datos);
-                }else{
+                }else if ($tipo == 0){
                     $resp = array('code' => '1', 'menssaje' => 'No hay publicaciones eliminadas');
+                }else{
+                    $datos[] = ['consulta' => ''];
+                    $datos[] = ['consulta' => ''];
+                    $resp = array('code' => '0', 'menssaje' => 'operación exitosa', 'datos' => $datos);
                 }
                 echo json_encode($resp);
             }

@@ -1,12 +1,11 @@
 const inputs = document.querySelectorAll('input');
-const input_tuNombre = document.querySelector('#tu-nombre');
-const input_tuControl = document.querySelector('#tu-control');
+const inputTuNombre = document.querySelector('#tu-nombre');
+const inputTuControl = document.querySelector('#tu-control');
+const btnGuardarTuInformacion = document.querySelector('.container-infoUser .btn.btn-outline-success');
 
-const tu_Nombre = input_tuNombre.value;
-const tu_control = input_tuControl.value;
+const tu_Nombre = inputTuNombre.value;
+const tu_control = inputTuControl.value;
 
-input_tuNombre.addEventListener('change', comprobarTuInformacion);
-input_tuControl.addEventListener('change', comprobarTuInformacion);
 
 const tuInformacion = {
     nombre: false,
@@ -25,13 +24,18 @@ const validarForm = (e) => {
 }
 
 const comprobarTuInformacion = function () {
-    tuInformacion.nombre = validarCampo(expresiones.usuario, input_tuNombre.value, input_tuNombre.id);
-    tuInformacion.control = validarCampo(expresiones.NoControl, input_tuControl.value, input_tuControl.id);
+    tuInformacion.nombre = validarCampo(expresiones.usuario, inputTuNombre.value, inputTuNombre.id);
+    tuInformacion.control = validarCampo(expresiones.NoControl, inputTuControl.value, inputTuControl.id);
     if (tuInformacion.nombre && tuInformacion.control){
         if (tuInformacion.nombre == tu_Nombre && tuInformacion.control == tu_control){
-
+            btnGuardarTuInformacion.removeAttribute('disabled');
         }else{
-            
+            btnGuardarTuInformacion.setAttribute('disabled','true');
         }
     }
 }
+inputTuNombre.addEventListener('keyup', comprobarTuInformacion);
+inputTuNombre.addEventListener('keypress', comprobarTuInformacion);
+inputTuControl.addEventListener('keyup', comprobarTuInformacion);
+inputTuControl.addEventListener('keypress', comprobarTuInformacion);
+comprobarTuInformacion();

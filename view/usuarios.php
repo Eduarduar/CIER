@@ -48,15 +48,15 @@
                     <div class="mb-3 col-md-6">
                         <label for="tu-nombre" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="tu-nombre" name="tu-nombre" value="<?php echo $tu_nombre; ?>">
-                        <div class="valid-feedback">El nombre no es valido</div>
+                        <div class="invalid-feedback">El nombre no es valido</div>
                     </div>
                     <div class="mb-3 col-md-6">
                         <label for="tu-control" class="form-label">No. Control</label>
                         <input type="number" class="form-control no-arrows" id="tu-control" name="tu-control" value="<?php echo $tu_control; ?>">
-                        <div class="valid-feedback">El numero de control es invalido</div>
+                        <div class="invalid-feedback">El numero de control es invalido</div>
                     </div>
                     <div class="col-md-6">
-                        <button type="button" class="btn btn-outline-success">Guardar Cambios</button>
+                        <button type="button" class="btn btn-outline-success" disabled>Guardar Cambios</button>
                         <button type="button" class="btn btn-info">Cambiar contraseña</button>
                     </div>
                 </div>

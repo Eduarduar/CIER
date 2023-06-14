@@ -106,6 +106,24 @@
     color: #fff;
 }
 
+.publicacion_publicar {
+    background: #0000;
+    border: none;
+    border-radius: 10px;
+    transition: .3s;
+    padding: .3rem;
+    font-size: 15pt;
+    margin: 1rem;
+    user-select: none;
+    cursor: pointer;
+}
+
+.publicacion_publicar:hover{
+    background: #28fcea;
+    color: #000;
+}
+
+
 .no-scroll {
     overflow: hidden;
 }
