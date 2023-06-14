@@ -8,7 +8,11 @@
 
         public function login($control, $contra){
             $md5 = md5($contra);
-            $query = $this->connect()->prepare("SELECT * FROM usuarios WHERE tNumControlUsuarios = '$control'");
+            $query = $this->connect()->prepare("SELECT u.eCodeUsuarios, u.tNombreUsuarios, u.tNumControlUsuarios, u.tContraUsuarios, r.tNombreRol AS tRolUsuarios, u.fCreateUsuarios, u.fUpdateUsuarios, u.bEstadoUsuarios
+            FROM usuarios u
+            INNER JOIN roles r ON u.eRolUsuarios = r.eCodeRol
+            WHERE u.tNumControlUsuarios = $control;
+            ");
             $query->execute();
 
             if ($query->rowCount()){
@@ -16,7 +20,8 @@
                     $tContraUsuario = $usuario['tContraUsuarios'];
                     $datos = [
                         'eCodeUsuario' => $usuario['eCodeUsuarios'],
-                        'tNombreUsuario' => $usuario['tNombreUsuarios']
+                        'tNombreUsuario' => $usuario['tNombreUsuarios'],
+                        'tRolUsuario' => $usuario['tRolUsuarios']
                     ];
                 }
 
@@ -92,7 +97,7 @@
                     }
                     $resp = array('code' => '0', 'menssaje' => 'operación exitosa', 'datos' => $datos);
                 }else{
-                    $resp = array('code' => '1', 'menssaje' => 'Algo salio mal');
+                    $resp = array('code' => '1', 'menssaje' => 'No hay publicaciones eliminadas');
                 }
                 echo json_encode($resp);
             }

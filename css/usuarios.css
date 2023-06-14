@@ -1,0 +1,34 @@
+.main {
+    display: flex;
+    flex-direction: column;
+}
+
+.container-infoUser {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.container-infoUser button {
+    margin-bottom: 1rem;
+}
+
+.container-users {
+    border-top: #000 solid 2px;
+    padding: 1rem;
+}
+
+.no-arrows::-webkit-inner-spin-button,
+.no-arrows::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-arrows {
+  -moz-appearance: textfield;
+}
+
+.noUsuarios {
+    text-align: center;
+}
