@@ -132,7 +132,8 @@ body {
 
 .login-card input[type="text"],
 .login-card input[type="password"],
-.login-card input[type="email"] {
+.login-card input[type="email"],
+.login-card input[type="number"] {
   border: none;
   outline: none;
   background: #e6e6e6;
@@ -146,7 +147,8 @@ body {
 
 .login-card input[type="text"]::placeholder,
 .login-card input[type="password"]::placeholder,
-.login-card input[type="email"]::placeholder {
+.login-card input[type="email"]::placeholder,
+.login-card input[type="number"]::placeholder {
   color: #000;
 }
 
@@ -193,4 +195,14 @@ body {
 .login-card button:hover {
   background: #004040;
   cursor: pointer;
+}
+
+.no-arrows::-webkit-inner-spin-button,
+.no-arrows::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-arrows {
+  -moz-appearance: textfield;
 }

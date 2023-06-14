@@ -2,7 +2,7 @@
 
     session_start();
 
-    if (isset($_SESSION['eCodeUsuario']) and isset($_SESSION['tNombreUsuario'])){
+    if (isset($_SESSION['eCodeUsuario']) and isset($_SESSION['tNombreUsuario']) and isset($_SESSION['tRolUsuario'])){
         header('location: ./index');
     }
 
@@ -15,6 +15,7 @@
         if ($datos != false){
             $_SESSION['eCodeUsuario'] = $datos['eCodeUsuario'];
             $_SESSION['tNombreUsuario'] = $datos['tNombreUsuario'];
+            $_SESSION['tRolUsuario'] = $datos['tRolUsuario'];
             header('location: ./index');
         }
         $error = true;
@@ -28,13 +29,12 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- <link rel="stylesheet" href="https://bootswatch.com/5/lux/bootstrap.min.css"> -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="../css/login.css">
         <link rel="shortcut icon" href="../img/utem.png" type="image/x-icon">
-        
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-        <title>Iniciar de sesión</title>
+    <link rel="stylesheet" href="https://bootswatch.com/5/lux/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <title>Iniciar de sesión</title>
     </head>
     <body>
 
@@ -73,7 +73,7 @@
 
                     <div class="form-item">
                         <span class="form-item-icon material-symbols-outlined">person</span>
-                        <input type="text" name="control" id="control" placeholder="No. Control" required>
+                        <input type="number" class="no-arrows" name="control" id="control" placeholder="No. Control" required>
                         <p class="text-invalid">numero incorrecto</p>
                     </div>
 

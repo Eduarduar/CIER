@@ -1,0 +1,35 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header {
+    background: #272a2d;
+}
+
+header nav ul li a {
+    font-size: 9.5pt !important;
+}
+
+header button.btn-outline-success{
+    margin-right: 1rem;
+}
+header button.btn-success {
+    margin-right: calc(1rem + 2px);
+}
+body::-webkit-scrollbar {
+    width: 10px;
+    background: #272a2d;
+}
+
+body::-webkit-scrollbar-thumb {
+    background: #616161;
+    border-radius: 5px;
+}
+
+.container-center {
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+}
