@@ -197,7 +197,6 @@ const activarButtons_eliminar = function() {
           if (decodificado.code === '0') {
             let padre = e.target.parentNode;
             padre = padre.parentNode;
-            console.log(padre);
             padre.parentNode.removeChild(padre);
           } else {
             // La operación en el servidor no fue exitosa
@@ -230,7 +229,6 @@ const desactivarButtons_eliminar = function() {
             let padre = e.target.parentNode;
             do {
               padre = padre.parentNode;
-              console.log(padre);
             } while (padre.classList.contains('container-publicacion'));
             padre.parentNode.removeChild(padre);
           } else {
@@ -246,93 +244,138 @@ const desactivarButtons_eliminar = function() {
     })
   })
 }
+
+const activarButtons_publicar = function() {
+  document.querySelectorAll('.publicacion_publicar').forEach(el => {
+    el.addEventListener('click', function(e) {
+      const formData = new FormData();
+      formData.append('publicar', e.target.dataset.publicar);
+      formData.append('id_user', id_user);
+      $.ajax({
+        url: '../db/consultas.php',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (respuesta) {
+          var decodificado = JSON.parse(respuesta);
+          if (decodificado.code === '0') {
+            let padre = e.target.parentNode;
+            padre = padre.parentNode;
+            padre.parentNode.removeChild(padre);
+          } else {
+            // La operación en el servidor no fue exitosa
+            alert(decodificado.message);
+          }
+        },
+        error: function (error) {
+          // Manejar errores en la solicitud AJAX
+          console.log('Error en la solicitud AJAX:', error);
+        }
+      });
+    })
+  })
+}
+
 activarButtons_pdf()
 activarButtons_eliminar();
 
 // funcion que crea la estructura de una nueva publicacion con los datos que se le proporcionan
 const nuevaPublicacion = function (datos){
-  const containerPublicaciones = document.querySelector('.container-publicaciones');
+  if (datos.consulta == 'publicadas' || datos.consulta == 'eliminadas' ){
 
-  const publicacion = document.createElement('div');
-  publicacion.className = 'container-publicacion';
-
-  const header = document.createElement('div');
-  header.className = 'container-publicacion_header';
-
-  const user = document.createElement('span');
-  user.className = 'publicacion_user';
-  if (datos.consulta === 'eliminadas'){
-  user.textContent = `${datos.usuario} - ${datos.tipo} [Eliminada por ${datos.nameUpdate}]`;
-  }else{
-  user.textContent = `${datos.usuario} - ${datos.tipo}`;
+    const containerPublicaciones = document.querySelector('.container-publicaciones');
+    
+    const publicacion = document.createElement('div');
+    publicacion.className = 'container-publicacion';
+    
+    const header = document.createElement('div');
+    header.className = 'container-publicacion_header';
+    
+    const user = document.createElement('span');
+    user.className = 'publicacion_user';
+    if (datos.consulta === 'eliminadas'){
+      user.textContent = `${datos.usuario} - ${datos.tipo} [Eliminado por ${datos.nameUpdate}]`;
+    }else{
+      user.textContent = `${datos.usuario} - ${datos.tipo}`;
+    }
+    header.appendChild(user);
+    
+    const fecha = document.createElement('span');
+    fecha.className = 'publicacion_fecha';
+    if (datos.consulta === 'eliminadas'){
+      fecha.textContent = `${datos.create} - Eliminado[${datos.update}]`;
+    }else{
+      fecha.textContent = `${datos.create}`;
+    }
+    header.appendChild(fecha);
+    
+    publicacion.appendChild(header);
+    
+    const main = document.createElement('div');
+    main.className = 'container-publicacion_main';
+    
+    const text = document.createElement('div');
+    text.className = 'publicacion_text';
+    const textContent = document.createElement('p');
+    textContent.textContent = datos.text;
+    text.appendChild(textContent);
+    main.appendChild(text);
+    
+    if (datos.img != ''){
+      const img = document.createElement('div');
+      img.className = 'publicacion_img';
+      const imgContent = document.createElement('img');
+      imgContent.src = datos.img;
+      img.appendChild(imgContent);
+      main.appendChild(img);
+    }
+    
+    if (datos.pdf != ''){
+      const pdf = document.createElement('div');
+      pdf.className = 'publicacion_pdf';
+      const pdfButton = document.createElement('button');
+      pdfButton.setAttribute('data-bs-toggle', 'modal');
+      pdfButton.setAttribute('data-bs-target', '#modal-pdf');
+      pdfButton.setAttribute('data-pdf', `${datos.pdf}`);
+      const pdfIcon = document.createElement('span');
+      pdfIcon.setAttribute('data-pdf', `${datos.pdf}`);
+      pdfIcon.className = 'icon-pdf material-symbols-outlined';
+      pdfIcon.textContent = 'picture_as_pdf';
+      const pdfText = document.createElement('span');
+      pdfText.setAttribute('data-pdf', `${datos.pdf}`);
+      pdfText.textContent = 'ver pdf adjunto';
+      pdfButton.appendChild(pdfIcon);
+      pdfButton.appendChild(pdfText);
+      pdf.appendChild(pdfButton);
+      main.appendChild(pdf);
+    }
+    publicacion.appendChild(main);
+    
+    const footer = document.createElement('div');
+    footer.className = 'container-publicacion_footer';
+    
+    if (datos.consulta == 'publicadas'){
+      const eliminar = document.createElement('span');
+      eliminar.className = 'publicacion_eliminar fa fa-times';
+      eliminar.setAttribute('aria-hidden', 'true');
+      eliminar.textContent = ' Eliminar';
+      eliminar.setAttribute('data-eliminar',`${datos.publicacion}`);
+      footer.appendChild(eliminar);
+    }else{
+      const publicar = document.createElement('span');
+      publicar.className = 'publicacion_publicar fa fa-retweet';
+      publicar.setAttribute('aria-hidden', 'true');
+      publicar.textContent = ' Publicar';
+      publicar.setAttribute('data-publicar',`${datos.publicacion}`);
+      footer.appendChild(publicar);
+    }
+    
+    publicacion.appendChild(footer);
+    
+    containerPublicaciones.prepend(publicacion);
+    
   }
-  header.appendChild(user);
-
-  const fecha = document.createElement('span');
-  fecha.className = 'publicacion_fecha';
-  if (datos.consulta === 'eliminadas'){
-    fecha.textContent = `${datos.create} - Eliminada[${datos.update}]`;
-  }else{
-    fecha.textContent = `${datos.create}`;
-  }
-  header.appendChild(fecha);
-
-  publicacion.appendChild(header);
-
-  const main = document.createElement('div');
-  main.className = 'container-publicacion_main';
-
-  const text = document.createElement('div');
-  text.className = 'publicacion_text';
-  const textContent = document.createElement('p');
-  textContent.textContent = datos.text;
-  text.appendChild(textContent);
-  main.appendChild(text);
-
-  if (datos.img != ''){
-    const img = document.createElement('div');
-    img.className = 'publicacion_img';
-    const imgContent = document.createElement('img');
-    imgContent.src = datos.img;
-    img.appendChild(imgContent);
-    main.appendChild(img);
-  }
-
-  if (datos.pdf != ''){
-    const pdf = document.createElement('div');
-    pdf.className = 'publicacion_pdf';
-    const pdfButton = document.createElement('button');
-    pdfButton.setAttribute('data-bs-toggle', 'modal');
-    pdfButton.setAttribute('data-bs-target', '#modal-pdf');
-    pdfButton.setAttribute('data-pdf', `${datos.pdf}`);
-    const pdfIcon = document.createElement('span');
-    pdfIcon.setAttribute('data-pdf', `${datos.pdf}`);
-    pdfIcon.className = 'icon-pdf material-symbols-outlined';
-    pdfIcon.textContent = 'picture_as_pdf';
-    const pdfText = document.createElement('span');
-    pdfText.setAttribute('data-pdf', `${datos.pdf}`);
-    pdfText.textContent = 'ver pdf adjunto';
-    pdfButton.appendChild(pdfIcon);
-    pdfButton.appendChild(pdfText);
-    pdf.appendChild(pdfButton);
-    main.appendChild(pdf);
-  }
-  publicacion.appendChild(main);
-
-  const footer = document.createElement('div');
-  footer.className = 'container-publicacion_footer';
-
-  const eliminar = document.createElement('span');
-  eliminar.className = 'publicacion_eliminar fa fa-times';
-  eliminar.setAttribute('aria-hidden', 'true');
-  eliminar.textContent = ' Eliminar';
-  eliminar.setAttribute('data-eliminar',`${datos.publicacion}`);
-  footer.appendChild(eliminar);
-
-  publicacion.appendChild(footer);
-
-  containerPublicaciones.prepend(publicacion);
-
 }
 
 btn_cerrarModal.addEventListener('click', () => {
@@ -356,13 +399,14 @@ const showPublicacionesPublicadas = (e) => {
         containerPublicaciones.innerHTML = '';
         respuesta.datos.forEach((element) => {nuevaPublicacion(element)});
         let boton = document.querySelector('.container-publicador button.btn-outline-success');
-        let boton2 = document.querySelector('.container-publicador button.btn-primary');
-        boton2.removeAttribute('disabled');
-        boton.innerHTML = 'publicaciones eliminadas';
-        boton.classList.add('btn-outline-danger');
-        boton.addEventListener('click', showPublicacionesEliminadas);
-        boton.removeEventListener('click', showPublicacionesPublicadas);
-        boton.classList.remove('btn-outline-success');
+        let boton2 = document.querySelector('.container-publicador button.btn-outline-danger');
+        let boton3 = document.querySelector('.container-publicador button.btn-primary');
+        boton.setAttribute('style','display:none');
+        boton2.removeAttribute('style');
+        boton3.removeAttribute('disabled');
+        activarButtons_pdf();
+        activarModalImg();
+        activarButtons_eliminar();
       } else {
         // La operación en el servidor no fue exitosa
         alert(respuesta.menssaje);
@@ -376,38 +420,40 @@ const showPublicacionesPublicadas = (e) => {
 }
 
 const showPublicacionesEliminadas = (e) => {
-  document.querySelector('.container-publicador button.btn-outline-danger').addEventListener('click', (e) => {
-    const containerPublicaciones = document.querySelector('.container-publicaciones');
-    $.ajax({
-      url: '../db/consultas.php',
-      type: 'POST',
-      dataType: 'json', // Agrega esta línea para indicar que esperas una respuesta JSON
-      data: {
-        publicaciones: 'eliminadas'
-      },
-      success: function (respuesta) {
-        if (respuesta.code === '0') {
-          containerPublicaciones.innerHTML = '';
-          respuesta.datos.forEach((element) => {nuevaPublicacion(element)});
-          let boton = document.querySelector('.container-publicador button.btn-outline-danger');
-          let boton2 = document.querySelector('.container-publicador button.btn-primary');
-          boton2.setAttribute('disabled', 'true');
-          boton.innerHTML = 'publicaciones'
-          boton.classList.add('btn-outline-success')
-          boton.addEventListener('click', showPublicacionesPublicadas);
-          boton.removeEventListener('click', showPublicacionesEliminadas);
-          boton.classList.remove('btn-outline-danger');
-        } else {
-          // La operación en el servidor no fue exitosa
-          alert(respuesta.menssaje); // Corrige "menssaje" a "mensaje"
-        }
-      },
-      error: function (error) {
-        // Manejar errores en la solicitud AJAX
-        console.log('Error en la solicitud AJAX:', error);
+  const containerPublicaciones = document.querySelector('.container-publicaciones');
+  $.ajax({
+    url: '../db/consultas.php',
+    type: 'POST',
+    dataType: 'json', // Agrega esta línea para indicar que esperas una respuesta JSON
+    data: {
+      publicaciones: 'eliminadas'
+    },
+    success: function (respuesta) {
+      if (respuesta.code === '0') {
+        containerPublicaciones.innerHTML = '';
+        respuesta.datos.forEach((element) => {nuevaPublicacion(element)});
+        let boton = document.querySelector('.container-publicador button.btn-outline-danger');
+        let boton2 = document.querySelector('.container-publicador button.btn-outline-success');
+        let boton3 = document.querySelector('.container-publicador button.btn-primary');
+        boton.setAttribute('style','display:none');
+        boton2.removeAttribute('style');
+        boton3.setAttribute('disabled', 'true');
+        activarButtons_pdf();
+        activarModalImg();
+        activarButtons_publicar();
+      } else {
+        // La operación en el servidor no fue exitosa
+        alert(respuesta.menssaje); // Corrige "menssaje" a "mensaje"
       }
-    });
-  })
+    },
+    error: function (error) {
+      // Manejar errores en la solicitud AJAX
+      console.log('Error en la solicitud AJAX:', error);
+    }
+  });
 }
 
-document.querySelector('.container-publicador button.btn-outline-danger').addEventListener('click', showPublicacionesEliminadas());
+
+
+document.querySelector('.container-publicador button.btn-outline-danger').addEventListener('click', showPublicacionesEliminadas);
+document.querySelector('.container-publicador button.btn-outline-success').addEventListener('click', showPublicacionesPublicadas);

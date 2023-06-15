@@ -10,6 +10,8 @@
         header('location: ./index');
     }
 
+    $id_user = $_SESSION['eCodeUsuario'];
+    
     $consulta = new consultas();
 
     $info_tu_user = $consulta->consultar("SELECT tNombreUsuarios, tNumControlUsuarios FROM usuarios WHERE eCodeUsuarios = " . $_SESSION['eCodeUsuario']);
@@ -48,22 +50,22 @@
                     <div class="mb-3 col-md-6">
                         <label for="tu-nombre" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="tu-nombre" name="tu-nombre" value="<?php echo $tu_nombre; ?>">
-                        <div class="valid-feedback">El nombre no es valido</div>
+                        <div class="invalid-feedback">El nombre no es valido</div>
                     </div>
                     <div class="mb-3 col-md-6">
                         <label for="tu-control" class="form-label">No. Control</label>
                         <input type="number" class="form-control no-arrows" id="tu-control" name="tu-control" value="<?php echo $tu_control; ?>">
-                        <div class="valid-feedback">El numero de control es invalido</div>
+                        <div class="invalid-feedback">El numero de control es invalido</div>
                     </div>
                     <div class="col-md-6">
-                        <button type="button" class="btn btn-outline-success">Guardar Cambios</button>
+                        <button type="button" class="btn btn-outline-success" disabled>Guardar Cambios</button>
                         <button type="button" class="btn btn-info">Cambiar contraseña</button>
                     </div>
                 </div>
                     
                 <div class="container-users table-responsive">
                     <h2>Usuarios</h2>
-                    <table class="table">
+                    <table class="table" data-accion="insert-usuario">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -80,23 +82,35 @@
                                 $usuarios = $consulta->consultar("SELECT u.eCodeUsuarios, u.tNombreUsuarios, u.tNumControlUsuarios, r.tNombreRol AS tRolUsuarios, u.fCreateUsuarios, u.fUpdateUsuarios, u.bEstadoUsuarios
                                 FROM usuarios u
                                 INNER JOIN roles r ON u.eRolUsuarios = r.eCodeRol
-                                WHERE u.eCodeUsuarios <> " . $_SESSION['eCodeUsuario'] . ";");
+                                WHERE u.eCodeUsuarios <> $id_user;");
                                 if ($usuarios->rowCount()){
                                     foreach($usuarios as $usuario){
                                         ?>
-                                            <tr>
-                                                <td><?php echo $usuario['eCodeUsuarios']; ?></td>
-                                                <td><?php echo $usuario['tNombreUsuarios']; ?></td>
-                                                <td><?php echo $usuario['tNumControlUsuarios']; ?></td>
-                                                <td><?php echo $usuario['tRolUsuarios']; ?></td>
-                                                <td><?php echo $usuario['fCreateUsuarios']; ?></td>
-                                                <td><?php echo $usuario['fUpdateUsuarios']; ?></td>
-                                                <td><?php echo $usuario['bEstadoUsuarios']; ?></td>
+                                            <tr data-accion="usuario" class="contenido" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>" >
+                                                <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php echo $usuario['eCodeUsuarios']; ?></td>
+                                                <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php echo $usuario['tNombreUsuarios']; ?></td>
+                                                <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php echo $usuario['tNumControlUsuarios']; ?></td>
+                                                <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php echo $usuario['tRolUsuarios']; ?></td>
+                                                <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php echo $usuario['fCreateUsuarios']; ?></td>
+                                                <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php 
+                                                
+                                                if ($usuario['fUpdateUsuarios'] == ''){
+                                                    echo '-----';
+                                                }else{
+                                                    echo $usuario['fUpdateUsuarios'];   
+                                                } 
+                                                
+                                                ?></td>
+                                                <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php echo $usuario['bEstadoUsuarios']; ?></td>
                                             </tr>
                                         <?php
                                     }
                                 }else{
-                                    echo '<td colspan="7" class="noUsuarios">No hay mas usuarios</td>';
+                                    ?>
+                                        <tr class="contenido">
+                                            <td colspan="7"  data-accion="usuario" class="noUsuarios">No hay mas usuarios</td>
+                                        </tr>
+                                    <?php
                                 }
                                 ?>
                         </tbody>
@@ -105,6 +119,11 @@
             </div>
             
         </main>
+        
+        <div id="menuDesplegable" class="menu">
+            <ul>
+            </ul>
+        </div>
 
         <script>
             const id_user = <?php echo $_SESSION['eCodeUsuario']; ?>;

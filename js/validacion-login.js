@@ -14,10 +14,10 @@ const sesion = {
 const validarForm = (e) => {
     switch (e.target.name){
         case 'control':
-            sesion.control = validarCampo(expresiones.NoControl, e.target.value, e.target.id)
+            sesion.control = validarCampoLogin(expresiones.NoControl, e.target.value, e.target.id)
         break;
         case 'contra':
-            sesion.contra = validarCampo(expresiones.contra, e.target.value, e.target.id)
+            sesion.contra = validarCampoLogin(expresiones.contra, e.target.value, e.target.id)
         break;
     }
 }
@@ -25,8 +25,8 @@ const validarForm = (e) => {
 const submit = function (){
     let control = form_sesion.elements[0],
     contra = form_sesion.elements[1]
-    sesion.control  = validarCampo(expresiones.NoControl,   control.value,  control.id  )
-    sesion.contra   = validarCampo(expresiones.contra,      contra.value,   contra.id   ) 
+    sesion.control  = validarCampoLogin(expresiones.NoControl,   control.value,  control.id  )
+    sesion.contra   = validarCampoLogin(expresiones.contra,      contra.value,   contra.id   ) 
     if (sesion.control == true && sesion.contra == true){
         form_sesion.submit()
     }

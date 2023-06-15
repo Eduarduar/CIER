@@ -62,14 +62,74 @@
         return $carpeta . $nuevoNombre;
     }
 
-    // consultas de lapagina publicaciones ------------------------------------------------------------------------------------------------------------
-
+    
     // Comprobar si se realizó una solicitud POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+        // consultas de la pagina usuarios ----------------------------------------------------------------------------------------------------------------
+
+        if (isset($_POST['usuario'])){
+            switch($_POST['usuario']){
+                case 'estado':
+                    if (isset($_POST['usuario_id'])){
+                        $id = $_POST['usuario_id'];
+                        $usuario = $consulta->consultar("SELECT bEstadoUsuarios FROM usuarios WHERE eCodeUsuarios = $id");
+                        if ($usuario->rowCount()){
+                            foreach($usuario as $info){
+                                $newEstado = $info['bEstadoUsuarios'] == 1 ? 0 : 1;
+                            }
+                            $consulta->consultarConfirmar("UPDATE usuarios SET bEstadoUsuarios = $newEstado WHERE eCodeUsuarios = $id");
+                            $resp = array('code' => '0', 'message' => 'El usuario a sido actualizado');
+                        }else{
+                            $resp = array('code' => '1', 'message' => 'El usuario no existe');
+                        }
+                    }else{
+                        $resp = array('code' => '1', 'message' => 'La acción no es valida');
+                    }
+                break;
+
+                case 'insertar':
+
+                default:
+                    $resp = array('code' => '1', 'message' => 'La acción no es valida');
+            }
+            echo json_encode($resp);
+        }
+        
+        if (isset($_POST['tuControl']) && isset($_POST['tuNombre']) && isset($_POST['id_user'])){
+            $nombre = $_POST['tuNombre'];
+            $control = $_POST['tuControl'];
+            $id_user = $_POST['id_user'];
+            if ($consulta->consultarConfirmar("UPDATE usuarios SET tNombreUsuarios = '$nombre', tNumControlUsuarios = $control, fUpdateUsuarios = CURRENT_TIMESTAMP WHERE eCodeUsuarios = $id_user;")){
+                $resp = array('code' => '0', 'message' => 'se actualizo correctamente los datos');
+            }else{
+                $resp = array('code' => '1', 'message' => 'algo a salido mal al intentar actualizar los datos');
+            }
+            echo json_encode($resp);
+        }
+
+        // consultas de lapagina publicaciones ------------------------------------------------------------------------------------------------------------
+
+        if (isset($_POST['publicar']) and isset($_POST['id_user'])){
+            $publicacion = $_POST['publicar'];
+            $id_user = $_POST['id_user'];
+            $publicacion = $consulta->consultarConfirmar("UPDATE publicaciones SET bEstadoPublicaciones = 1, eUpdatePublicaciones = $id_user, fUpdatePublicaciones = CURRENT_TIMESTAMP WHERE eCodePublicaciones = $publicacion");
+            if (!$publicacion){
+                $resp = array('code' => '1', 'message' => 'algo a salido mal al intentar eliminar la publicación');
+            }else{
+                $resp = array('code' => '0', 'message' => 'publicación eliminada exitosamente');
+                
+            }
+            echo json_encode($resp);
+        }
+
         if (isset($_POST['publicaciones'])){
             if ($_POST['publicaciones'] === 'eliminadas' || $_POST['publicaciones'] === 'publicadas' ){
-                $tipo = $_POST['publicaciones'] === 'eliminadas' ? 0 : 1;
+                if ($_POST['publicaciones'] === 'publicadas'){
+                    $tipo = 1;
+                }else{
+                    $tipo = 0;
+                }
                 $publicaciones = $consulta->consultar("SELECT p.eCodePublicaciones, u.tNombreUsuarios, p.tMensajePublicaciones, p.tImgPublicaciones, p.tPdfPublicaciones, t.tNombreTipoPublicaciones, p.fCreatePublicaciones, p.fUpdatePublicaciones, u2.tNombreUsuarios AS tNombreUsuariosUpdate
                 FROM publicaciones p
                 INNER JOIN usuarios u ON p.eUserPublicaciones = u.eCodeUsuarios
@@ -77,7 +137,7 @@
                 LEFT JOIN usuarios u2 ON p.eUpdatePublicaciones = u2.eCodeUsuarios
                 WHERE p.bEstadoPublicaciones = $tipo
                 ORDER BY
-                p.eCodePublicaciones DESC;");
+                p.eCodePublicaciones;");
 
                 if ($publicaciones->rowCount()){
                     $datos = array();
@@ -96,8 +156,12 @@
                         ];
                     }
                     $resp = array('code' => '0', 'menssaje' => 'operación exitosa', 'datos' => $datos);
-                }else{
+                }else if ($tipo == 0){
                     $resp = array('code' => '1', 'menssaje' => 'No hay publicaciones eliminadas');
+                }else{
+                    $datos[] = ['consulta' => ''];
+                    $datos[] = ['consulta' => ''];
+                    $resp = array('code' => '0', 'menssaje' => 'operación exitosa', 'datos' => $datos);
                 }
                 echo json_encode($resp);
             }
