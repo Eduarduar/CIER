@@ -1,5 +1,5 @@
 const expresiones = {                                                               // expreciones para validar los inputs
-	usuario: /^[a-zA-Z\s]+$/, // Letras, numeros, guion y guion_bajo
+	usuario: /^[a-zA-Z]+(?:\s[a-zA-Z]+)*$/, // Letras, numeros, guion y guion_bajo
 	contra: /^.{0}\w{8,30}$/,  // 8 a 20 digitos.
     contraS: /^.{0}\w{1,20}$/, // 1 a 20 digitos
 	correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,

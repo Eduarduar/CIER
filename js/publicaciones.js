@@ -197,7 +197,6 @@ const activarButtons_eliminar = function() {
           if (decodificado.code === '0') {
             let padre = e.target.parentNode;
             padre = padre.parentNode;
-            console.log(padre);
             padre.parentNode.removeChild(padre);
           } else {
             // La operación en el servidor no fue exitosa
@@ -230,7 +229,6 @@ const desactivarButtons_eliminar = function() {
             let padre = e.target.parentNode;
             do {
               padre = padre.parentNode;
-              console.log(padre);
             } while (padre.classList.contains('container-publicacion'));
             padre.parentNode.removeChild(padre);
           } else {
@@ -246,6 +244,39 @@ const desactivarButtons_eliminar = function() {
     })
   })
 }
+
+const activarButtons_publicar = function() {
+  document.querySelectorAll('.publicacion_publicar').forEach(el => {
+    el.addEventListener('click', function(e) {
+      const formData = new FormData();
+      formData.append('publicar', e.target.dataset.publicar);
+      formData.append('id_user', id_user);
+      $.ajax({
+        url: '../db/consultas.php',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (respuesta) {
+          var decodificado = JSON.parse(respuesta);
+          if (decodificado.code === '0') {
+            let padre = e.target.parentNode;
+            padre = padre.parentNode;
+            padre.parentNode.removeChild(padre);
+          } else {
+            // La operación en el servidor no fue exitosa
+            alert(decodificado.message);
+          }
+        },
+        error: function (error) {
+          // Manejar errores en la solicitud AJAX
+          console.log('Error en la solicitud AJAX:', error);
+        }
+      });
+    })
+  })
+}
+
 activarButtons_pdf()
 activarButtons_eliminar();
 
@@ -264,7 +295,7 @@ const nuevaPublicacion = function (datos){
     const user = document.createElement('span');
     user.className = 'publicacion_user';
     if (datos.consulta === 'eliminadas'){
-      user.textContent = `${datos.usuario} - ${datos.tipo} [Eliminada por ${datos.nameUpdate}]`;
+      user.textContent = `${datos.usuario} - ${datos.tipo} [Eliminado por ${datos.nameUpdate}]`;
     }else{
       user.textContent = `${datos.usuario} - ${datos.tipo}`;
     }
@@ -273,7 +304,7 @@ const nuevaPublicacion = function (datos){
     const fecha = document.createElement('span');
     fecha.className = 'publicacion_fecha';
     if (datos.consulta === 'eliminadas'){
-      fecha.textContent = `${datos.create} - Eliminada[${datos.update}]`;
+      fecha.textContent = `${datos.create} - Eliminado[${datos.update}]`;
     }else{
       fecha.textContent = `${datos.create}`;
     }
@@ -373,6 +404,9 @@ const showPublicacionesPublicadas = (e) => {
         boton.setAttribute('style','display:none');
         boton2.removeAttribute('style');
         boton3.removeAttribute('disabled');
+        activarButtons_pdf();
+        activarModalImg();
+        activarButtons_eliminar();
       } else {
         // La operación en el servidor no fue exitosa
         alert(respuesta.menssaje);
@@ -404,6 +438,9 @@ const showPublicacionesEliminadas = (e) => {
         boton.setAttribute('style','display:none');
         boton2.removeAttribute('style');
         boton3.setAttribute('disabled', 'true');
+        activarButtons_pdf();
+        activarModalImg();
+        activarButtons_publicar();
       } else {
         // La operación en el servidor no fue exitosa
         alert(respuesta.menssaje); // Corrige "menssaje" a "mensaje"
@@ -415,6 +452,8 @@ const showPublicacionesEliminadas = (e) => {
     }
   });
 }
+
+
 
 document.querySelector('.container-publicador button.btn-outline-danger').addEventListener('click', showPublicacionesEliminadas);
 document.querySelector('.container-publicador button.btn-outline-success').addEventListener('click', showPublicacionesPublicadas);
