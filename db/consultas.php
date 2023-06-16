@@ -70,16 +70,60 @@
 
         if (isset($_POST['usuario'])){
             switch($_POST['usuario']){
-                case 'estado':
+                case 'getUser':
                     if (isset($_POST['usuario_id'])){
                         $id = $_POST['usuario_id'];
+                        $usuario = $consulta->consultar("SELECT u.tNombreUsuarios, u.tNumControlUsuarios, r.tNombreRol FROM usuarios u JOIN roles r ON u.eRolUsuarios = r.eCodeRol WHERE u.eCodeUsuarios = $id;");
+                        if ($usuario->rowCount()){
+                            foreach($usuario as $info){
+                                $datos = [
+                                    'nombre' => $info['tNombreUsuarios'],
+                                    'numControl' => $info['tNumControlUsuarios'],
+                                    'rol' => $info['tNombreRol']
+                                ];
+                            }
+                            $resp = array('code' => '0', 'message' => 'Operación exitosa', 'datos' => $datos);
+                        }else{
+                            $resp = array('code' => '1', 'message' => 'El usuario no existe');
+                        }
+                    }else{
+                        $resp = array('code' => '1', 'message' => 'La acción no es valida');
+                    }
+                break;
+                case 'estado':
+                    if (isset($_POST['usuario_id']) && isset($_POST['id_user'])){
+                        $id = $_POST['usuario_id'];
+                        $id_user = $_POST['id_user'];
                         $usuario = $consulta->consultar("SELECT bEstadoUsuarios FROM usuarios WHERE eCodeUsuarios = $id");
                         if ($usuario->rowCount()){
                             foreach($usuario as $info){
                                 $newEstado = $info['bEstadoUsuarios'] == 1 ? 0 : 1;
                             }
-                            $consulta->consultarConfirmar("UPDATE usuarios SET bEstadoUsuarios = $newEstado WHERE eCodeUsuarios = $id");
-                            $resp = array('code' => '0', 'message' => 'El usuario a sido actualizado');
+                            if ($consulta->consultarConfirmar("UPDATE usuarios SET fUpdateUsuarios = CURRENT_TIMESTAMP, bEstadoUsuarios = $newEstado WHERE eCodeUsuarios = $id")){
+                                $usuarios = $consulta->consultar("SELECT u.eCodeUsuarios, u.tNombreUsuarios, u.tNumControlUsuarios, r.tNombreRol AS tRolUsuarios, u.fCreateUsuarios, u.fUpdateUsuarios, u.bEstadoUsuarios
+                                FROM usuarios u
+                                INNER JOIN roles r ON u.eRolUsuarios = r.eCodeRol
+                                WHERE u.eCodeUsuarios <> $id_user;");
+
+                                $datos = array();
+
+                                if ($usuarios->rowCount()) {
+                                    foreach ($usuarios as $usuario) {
+                                        $datos[] = array(
+                                            'eCodeUsuario' => $usuario['eCodeUsuarios'],
+                                            'tNombreUsuario' => $usuario['tNombreUsuarios'],
+                                            'tNumControlUsuario' => $usuario['tNumControlUsuarios'],
+                                            'tRolUsuario' => $usuario['tRolUsuarios'],
+                                            'fCreateUsuario' => $usuario['fCreateUsuarios'],
+                                            'fUpdateUsuario' => $usuario['fUpdateUsuarios'],
+                                            'bEstadoUsuario' => $usuario['bEstadoUsuarios']
+                                        );
+                                    }
+                                    $resp = array('code' => '0', 'message' => 'El usuario a sido actualizado', 'datos' => $datos);
+                                }
+                            }else{
+                                $resp = array('code' => '1', 'message' => 'Ocurrio un error al intentar actualizar el usuario');
+                            }
                         }else{
                             $resp = array('code' => '1', 'message' => 'El usuario no existe');
                         }
@@ -89,7 +133,46 @@
                 break;
 
                 case 'insertar':
+                    if (isset($_POST['usuario_id']) && isset($_POST['id_user']) && isset($_POST['nombre']) && isset($_POST['control']) && isset($_POST['rol'])){
+                        $id = $_POST['usuario_id'];
+                        $id_user = $_POST['id_user'];
+                        $nombre = $_POST['nombre'];
+                        $control = $_POST['control'];
+                        $rol = $_POST['rol'];
+                        $usuario = $consulta->consultar("SELECT eCodeUsuarios FROM usuarios WHERE eCodeUsuarios = $id");
+                        if ($usuario->rowCount()){
+                            if ($consulta->consultarConfirmar("UPDATE usuarios SET fUpdateUsuarios = CURRENT_TIMESTAMP, tNombreUsuarios = '$nombre', tNumControlUsuarios = '$control', eRolUsuarios = $rol WHERE eCodeUsuarios = $id")){
+                                $usuarios = $consulta->consultar("SELECT u.eCodeUsuarios, u.tNombreUsuarios, u.tNumControlUsuarios, r.tNombreRol AS tRolUsuarios, u.fCreateUsuarios, u.fUpdateUsuarios, u.bEstadoUsuarios
+                                FROM usuarios u
+                                INNER JOIN roles r ON u.eRolUsuarios = r.eCodeRol
+                                WHERE u.eCodeUsuarios <> $id_user;");
 
+                                $datos = array();
+
+                                if ($usuarios->rowCount()) {
+                                    foreach ($usuarios as $usuario) {
+                                        $datos[] = array(
+                                            'eCodeUsuario' => $usuario['eCodeUsuarios'],
+                                            'tNombreUsuario' => $usuario['tNombreUsuarios'],
+                                            'tNumControlUsuario' => $usuario['tNumControlUsuarios'],
+                                            'tRolUsuario' => $usuario['tRolUsuarios'],
+                                            'fCreateUsuario' => $usuario['fCreateUsuarios'],
+                                            'fUpdateUsuario' => $usuario['fUpdateUsuarios'],
+                                            'bEstadoUsuario' => $usuario['bEstadoUsuarios']
+                                        );
+                                    }
+                                    $resp = array('code' => '0', 'message' => 'El usuario a sido actualizado', 'datos' => $datos);
+                                }
+                            }else{
+                                $resp = array('code' => '1', 'message' => 'Ocurrio un error al intentar actualizar el usuario');
+                            }
+                        }else{
+                            $resp = array('code' => '1', 'message' => 'El usuario no existe');
+                        }
+                    }else{
+                        $resp = array('code' => '1', 'message' => 'La acción no es valida');
+                    }
+                break;
                 default:
                     $resp = array('code' => '1', 'message' => 'La acción no es valida');
             }
