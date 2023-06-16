@@ -1,5 +1,5 @@
 const expresiones = {    // Expresiones para validar los inputs
-	usuario: /^(?=.{1,100}$)[a-zA-Z]+(?:\s[a-zA-Z]+)*$/,  // Valida un nombre de usuario que contenga letras y espacios, con un máximo de 100 caracteres.
+	usuario: /^(?=.{1,100}$)[a-zA-ZáéíóúÁÉÍÓÚ]+(?:\s[a-zA-ZáéíóúÁÉÍÓÚ]+)*$/,  // Valida un nombre de usuario que contenga letras y espacios, con un máximo de 100 caracteres.
 	contra: /^.{0}\w{8,30}$/,  // Valida una contraseña de 8 a 30 caracteres.
 	contraS: /^.{0}\w{1,30}$/,  // Valida una contraseña de 1 a 20 caracteres.
 	correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,  // Valida un formato de correo electrónico válido.

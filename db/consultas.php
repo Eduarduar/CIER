@@ -11,7 +11,7 @@
             $query = $this->connect()->prepare("SELECT u.eCodeUsuarios, u.tNombreUsuarios, u.tNumControlUsuarios, u.tContraUsuarios, r.tNombreRol AS tRolUsuarios, u.fCreateUsuarios, u.fUpdateUsuarios, u.bEstadoUsuarios
             FROM usuarios u
             INNER JOIN roles r ON u.eRolUsuarios = r.eCodeRol
-            WHERE u.tNumControlUsuarios = $control;
+            WHERE u.tNumControlUsuarios = $control AND u.bEstadoUsuarios = 1;
             ");
             $query->execute();
 
@@ -132,7 +132,7 @@
                     }
                 break;
 
-                case 'insertar':
+                case 'actualizar':
                     if (isset($_POST['usuario_id']) && isset($_POST['id_user']) && isset($_POST['nombre']) && isset($_POST['control']) && isset($_POST['rol'])){
                         $id = $_POST['usuario_id'];
                         $id_user = $_POST['id_user'];
@@ -141,30 +141,35 @@
                         $rol = $_POST['rol'];
                         $usuario = $consulta->consultar("SELECT eCodeUsuarios FROM usuarios WHERE eCodeUsuarios = $id");
                         if ($usuario->rowCount()){
-                            if ($consulta->consultarConfirmar("UPDATE usuarios SET fUpdateUsuarios = CURRENT_TIMESTAMP, tNombreUsuarios = '$nombre', tNumControlUsuarios = '$control', eRolUsuarios = $rol WHERE eCodeUsuarios = $id")){
-                                $usuarios = $consulta->consultar("SELECT u.eCodeUsuarios, u.tNombreUsuarios, u.tNumControlUsuarios, r.tNombreRol AS tRolUsuarios, u.fCreateUsuarios, u.fUpdateUsuarios, u.bEstadoUsuarios
-                                FROM usuarios u
-                                INNER JOIN roles r ON u.eRolUsuarios = r.eCodeRol
-                                WHERE u.eCodeUsuarios <> $id_user;");
-
-                                $datos = array();
-
-                                if ($usuarios->rowCount()) {
-                                    foreach ($usuarios as $usuario) {
-                                        $datos[] = array(
-                                            'eCodeUsuario' => $usuario['eCodeUsuarios'],
-                                            'tNombreUsuario' => $usuario['tNombreUsuarios'],
-                                            'tNumControlUsuario' => $usuario['tNumControlUsuarios'],
-                                            'tRolUsuario' => $usuario['tRolUsuarios'],
-                                            'fCreateUsuario' => $usuario['fCreateUsuarios'],
-                                            'fUpdateUsuario' => $usuario['fUpdateUsuarios'],
-                                            'bEstadoUsuario' => $usuario['bEstadoUsuarios']
-                                        );
-                                    }
-                                    $resp = array('code' => '0', 'message' => 'El usuario a sido actualizado', 'datos' => $datos);
-                                }
+                            $users = $consulta->consultar("SELECT eCodeUsuarios FROM usuarios WHERE tNumControlUsuarios = '$control' AND eCodeUsuarios <> $id");
+                            if ($users->rowCount()){
+                                $resp = array('code' => '1', 'message' => 'El numero de control ya existe');
                             }else{
-                                $resp = array('code' => '1', 'message' => 'Ocurrio un error al intentar actualizar el usuario');
+                                if ($consulta->consultarConfirmar("UPDATE usuarios SET fUpdateUsuarios = CURRENT_TIMESTAMP, tNombreUsuarios = '$nombre', tNumControlUsuarios = '$control', eRolUsuarios = $rol WHERE eCodeUsuarios = $id")){
+                                    $usuarios = $consulta->consultar("SELECT u.eCodeUsuarios, u.tNombreUsuarios, u.tNumControlUsuarios, r.tNombreRol AS tRolUsuarios, u.fCreateUsuarios, u.fUpdateUsuarios, u.bEstadoUsuarios
+                                    FROM usuarios u
+                                    INNER JOIN roles r ON u.eRolUsuarios = r.eCodeRol
+                                    WHERE u.eCodeUsuarios <> $id_user;");
+    
+                                    $datos = array();
+    
+                                    if ($usuarios->rowCount()) {
+                                        foreach ($usuarios as $usuario) {
+                                            $datos[] = array(
+                                                'eCodeUsuario' => $usuario['eCodeUsuarios'],
+                                                'tNombreUsuario' => $usuario['tNombreUsuarios'],
+                                                'tNumControlUsuario' => $usuario['tNumControlUsuarios'],
+                                                'tRolUsuario' => $usuario['tRolUsuarios'],
+                                                'fCreateUsuario' => $usuario['fCreateUsuarios'],
+                                                'fUpdateUsuario' => $usuario['fUpdateUsuarios'],
+                                                'bEstadoUsuario' => $usuario['bEstadoUsuarios']
+                                            );
+                                        }
+                                        $resp = array('code' => '0', 'message' => 'El usuario a sido actualizado', 'datos' => $datos);
+                                    }
+                                }else{
+                                    $resp = array('code' => '1', 'message' => 'Ocurrio un error al intentar actualizar el usuario');
+                                }
                             }
                         }else{
                             $resp = array('code' => '1', 'message' => 'El usuario no existe');
@@ -179,14 +184,48 @@
             echo json_encode($resp);
         }
         
+        if (isset($_POST['passN']) && isset($_POST['passA']) && isset($_POST['id_user'])){
+            $passA = md5($_POST['passA']);
+            $passN = md5($_POST['passN']);
+            $id_user = $_POST['id_user'];
+            $contra = $consulta->consultar("SELECT tContraUsuarios FROM usuarios WHERE eCodeUsuarios = $id_user");
+            if ($contra->rowCount()){
+                foreach($contra as $info){
+                    $contraA = $info['tContraUsuarios'];
+                }
+                if (password_verify($passA,$contraA)){
+                    if (!password_verify($passN,$contraA)){
+                        $passHash = password_hash($passN, PASSWORD_DEFAULT, ['cost' => 10]);
+                        if ($consulta->consultarConfirmar("UPDATE usuarios SET tContraUsuarios = '$passHash' WHERE eCodeUsuarios = $id_user;")){
+                            $resp = array('code' => '0', 'message' => 'Se cambio la contraseña correctamente');
+                        }else{
+                            $resp = array('code' => '1', 'message' => 'algo a salido mal al intentar actualizar la contraseña');
+                        }
+                    }else{
+                        $resp = array('code' => '2', 'message' => 'Tu nueva contraseña no puede ser igual a la actual');
+                    }
+                }else{
+                    $resp = array('code' => '3', 'message' => 'La contraseña actual es incorrecta');
+                }
+            }else{
+                $resp = array('code' => '4', 'message' => 'El usuario que intenta modificar no existe');
+            }
+            echo json_encode($resp);
+        }
+
         if (isset($_POST['tuControl']) && isset($_POST['tuNombre']) && isset($_POST['id_user'])){
             $nombre = $_POST['tuNombre'];
             $control = $_POST['tuControl'];
             $id_user = $_POST['id_user'];
-            if ($consulta->consultarConfirmar("UPDATE usuarios SET tNombreUsuarios = '$nombre', tNumControlUsuarios = $control, fUpdateUsuarios = CURRENT_TIMESTAMP WHERE eCodeUsuarios = $id_user;")){
-                $resp = array('code' => '0', 'message' => 'se actualizo correctamente los datos');
+            $users = $consulta->consultar("SELECT eCodeUsuarios FROM usuarios WHERE tNumControlUsuarios = '$control' AND eCodeUsuarios <> $id_user");
+            if ($users->rowCount()){
+                $resp = array('code' => '1', 'message' => 'El numero de control ya existe');
             }else{
-                $resp = array('code' => '1', 'message' => 'algo a salido mal al intentar actualizar los datos');
+                if ($consulta->consultarConfirmar("UPDATE usuarios SET tNombreUsuarios = '$nombre', tNumControlUsuarios = $control, fUpdateUsuarios = CURRENT_TIMESTAMP WHERE eCodeUsuarios = $id_user;")){
+                    $resp = array('code' => '0', 'message' => 'se actualizo correctamente los datos');
+                }else{
+                    $resp = array('code' => '1', 'message' => 'algo a salido mal al intentar actualizar los datos');
+                }
             }
             echo json_encode($resp);
         }

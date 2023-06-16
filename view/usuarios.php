@@ -59,12 +59,15 @@
                     </div>
                     <div class="col-md-6">
                         <button type="button" class="btn btn-outline-success" disabled>Guardar Cambios</button>
-                        <button type="button" class="btn btn-info">Cambiar contraseña</button>
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#cambiarContra">Cambiar contraseña</button>
                     </div>
                 </div>
                     
                 <div class="container-users table-responsive">
-                    <h2>Usuarios</h2>
+                    <div class="container-subTitulo">
+                        <h2>Usuarios</h2>
+                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#insertarUsuario"><span class="fa fa-plus" aria-hidden="true"></span>  Agregar usuario</button>
+                    </div>
                     <table class="table" data-accion="insert-usuario">
                         <thead>
                             <tr>
@@ -133,35 +136,126 @@
         </div>
 
         <div class="modal fade" id="editarUsuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Usuario <br> [usuario prueba] </h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="usuario-nombre" class="form-label">Nombre:</label>
-                        <input type="text" class="form-control" name="usuario-nombre" id="usuario-nombre">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Usuario <br> [usuario prueba] </h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="mb-3">
-                        <label for="usuario-control" class="form-label">No. Control</label>
-                        <input type="number" class="form-control no-arrows" name="usuario-control" id="usuario-control">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="usuario-nombre" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" name="usuario-nombre" id="usuario-nombre">
+                            <div class="invalid-feedback">El nombre no es valido</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="usuario-control" class="form-label">No. Control</label>
+                            <input type="number" class="form-control no-arrows" name="usuario-control" id="usuario-control">
+                            <div class="invalid-feedback">El numero de control no es valido</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="usuario-rol" class="form-label">Rol</label>
+                            <select name="usuario-rol" id="usuario-rol" class="form-select">
+                                <option value="1">Administrador</option>
+                                <option value="2">Coordinador</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="usuario-rol" class="form-label">Rol</label>
-                        <select name="usuario-rol" id="usuario-rol" class="form-select">
-                            <option value="1">Administrador</option>
-                            <option value="2">Coordinador</option>
-                        </select>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary">Guardar</button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Guardar</button>
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="cambiarContra" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Cambiar Contraseña</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="passA">Contraseña actual:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-default" data-contra="1"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                                <input type="password" id="pass" name="pass" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                <div class="invalid-feedback" id="feedback-pass">minimo 8 caracteres</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="passN2">Nueva contraseña:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-default"data-contra="2"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                                <input type="password" id="passN2" name="passN2" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                <div class="invalid-feedback" id="feedback-passN2">minimo 8 caracteres</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="passN">Confirmar contraseña:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-default"data-contra="3"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                                <input type="password" id="passN" name="passN" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                <div class="invalid-feedback">La contraseña no coinside</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" disabled>Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="insertarUsuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar usuario</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="insertar-usuario-nombre" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" name="insertar-usuario-nombre" id="insertar-usuario-nombre">
+                            <div class="invalid-feedback">El nombre no es valido</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="insertar-usuario-control" class="form-label">No. Control</label>
+                            <input type="number" class="form-control no-arrows" name="insertar-usuario-control" id="insertar-usuario-control">
+                            <div class="invalid-feedback">El numero de control no es valido</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="insertar-usuario-rol" class="form-label">Rol</label>
+                            <select name="insertar-usuario-rol" id="insertar-usuario-rol" class="form-select">
+                                <option value="1">Administrador</option>
+                                <option value="2">Coordinador</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="insertar-passN2">contraseña:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-default"data-contra="2"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                                <input type="password" id="insertar-passN2" name="insertar-passN2" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                <div class="invalid-feedback" id="feedback-passN2">minimo 8 caracteres</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="insertar-passN">Confirmar contraseña:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-default"data-contra="3"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                                <input type="password" id="insertar-passN" name="insertar-passN" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                <div class="invalid-feedback">La contraseña no coinside</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" disabled>Agregar</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <script>
