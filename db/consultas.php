@@ -103,7 +103,7 @@
                                 $usuarios = $consulta->consultar("SELECT u.eCodeUsuarios, u.tNombreUsuarios, u.tNumControlUsuarios, r.tNombreRol AS tRolUsuarios, u.fCreateUsuarios, u.fUpdateUsuarios, u.bEstadoUsuarios
                                 FROM usuarios u
                                 INNER JOIN roles r ON u.eRolUsuarios = r.eCodeRol
-                                WHERE u.eCodeUsuarios <> $id_user;");
+                                WHERE u.eCodeUsuarios <> $id_user ORDER BY u.eCodeUsuarios;;");
 
                                 $datos = array();
 
@@ -149,7 +149,7 @@
                                     $usuarios = $consulta->consultar("SELECT u.eCodeUsuarios, u.tNombreUsuarios, u.tNumControlUsuarios, r.tNombreRol AS tRolUsuarios, u.fCreateUsuarios, u.fUpdateUsuarios, u.bEstadoUsuarios
                                     FROM usuarios u
                                     INNER JOIN roles r ON u.eRolUsuarios = r.eCodeRol
-                                    WHERE u.eCodeUsuarios <> $id_user;");
+                                    WHERE u.eCodeUsuarios <> $id_user ORDER BY u.eCodeUsuarios;");
     
                                     $datos = array();
     
@@ -176,6 +176,46 @@
                         }
                     }else{
                         $resp = array('code' => '1', 'message' => 'La acción no es valida');
+                    }
+                break;
+                case 'insertar':
+                    if (isset($_POST['contra']) && isset($_POST['id_user']) && isset($_POST['nombre']) && isset($_POST['control']) && isset($_POST['rol'])){
+                        $id_user = $_POST['id_user'];
+                        $nombre = $_POST['nombre'];
+                        $control = $_POST['control'];
+                        $rol = $_POST['rol'];
+                        $contra = md5($_POST['contra']); 
+                        $users = $consulta->consultar("SELECT eCodeUsuarios FROM usuarios WHERE tNumControlUsuarios = '$control'");
+                        if ($users->rowCount()){
+                            $resp = array('code' => '1', 'message' => 'El numero de control ya existe');
+                        }else{
+                            $passHash = password_hash($contra, PASSWORD_DEFAULT, ['cost' => 10]);
+                            if ($consulta->consultarConfirmar("INSERT INTO usuarios VALUES (NULL, '$nombre', '$control', '$passHash', $rol, CURRENT_TIMESTAMP, NULL, 1);")){
+                                $usuarios = $consulta->consultar("SELECT u.eCodeUsuarios, u.tNombreUsuarios, u.tNumControlUsuarios, r.tNombreRol AS tRolUsuarios, u.fCreateUsuarios, u.fUpdateUsuarios, u.bEstadoUsuarios
+                                FROM usuarios u
+                                INNER JOIN roles r ON u.eRolUsuarios = r.eCodeRol
+                                WHERE u.eCodeUsuarios <> $id_user ORDER BY u.eCodeUsuarios;");
+    
+                                $datos = array();
+
+                                if ($usuarios->rowCount()) {
+                                    foreach ($usuarios as $usuario) {
+                                        $datos[] = array(
+                                            'eCodeUsuario' => $usuario['eCodeUsuarios'],
+                                            'tNombreUsuario' => $usuario['tNombreUsuarios'],
+                                            'tNumControlUsuario' => $usuario['tNumControlUsuarios'],
+                                            'tRolUsuario' => $usuario['tRolUsuarios'],
+                                            'fCreateUsuario' => $usuario['fCreateUsuarios'],
+                                            'fUpdateUsuario' => $usuario['fUpdateUsuarios'],
+                                            'bEstadoUsuario' => $usuario['bEstadoUsuarios']
+                                        );
+                                    }
+                                }
+                                $resp = array('code' => '0', 'message' => 'Usuario agregado correctamente', 'datos' => $datos);
+                            }else{
+                                $resp = array('code' => '1', 'message' => 'Algo salio mal, al intentar insertar el usuario');
+                            }
+                        }
                     }
                 break;
                 default:

@@ -10,14 +10,15 @@ const selectRol = document.querySelector('#usuario-rol');
 const btnGuardarCambios = document.querySelector('#editarUsuario .modal-footer button.btn-primary');
 const btnShow = document.querySelectorAll('span[data-contra]');
 const btnCambiarContra = document.querySelector('#cambiarContra .modal-footer button.btn-primary');
+const btnInsertarUsuario = document.querySelector('#insertarUsuario .modal-footer button.btn-primary');
 const inputPassA = document.querySelector('#pass');
 const inputPassN = document.querySelector('#passN');
 const inputPassN2 = document.querySelector('#passN2');
-const inputInsertarNombre = document.querySelector('');
-const inputInsertarControl = document.querySelectorI('');
-const selectInsertarRol = document.querySelector('');
-const inputInsertarPassN2 = document.querySelector('');
-const inputInsertarPassN = document.querySelector('');
+const inputInsertarNombre = document.querySelector('#insertar-usuario-nombre');
+const inputInsertarControl = document.querySelector('#insertar-usuario-control');
+const selectInsertarRol = document.querySelector('#insertar-usuario-rol');
+const inputInsertarPassN2 = document.querySelector('#insertar-passN2');
+const inputInsertarPassN = document.querySelector('#insertar-passN');
 const tu_Nombre = inputTuNombre.value;
 const tu_control = inputTuControl.value;
 
@@ -85,12 +86,12 @@ const validarForm = (e) => {
             comprobarInsertarUsuario();
         break;
         case 'insertar-passN2':
-            cambiarContra.passN2 = validarCampo(expresiones.contra, e.target.value, e.target.id);
-            cambiarContra.passN = validarPassword(e.target.id.substring(0, e.target.id.length - 1));
+            insertarUsuario.passN2 = validarCampo(expresiones.contra, e.target.value, e.target.id);
+            insertarUsuario.passN = validarPassword(e.target.id.substring(0, e.target.id.length - 1));
             comprobarInsertarUsuario();
         break;
         case 'insertar-passN':
-            cambiarContra.passN = validarPassword(e.target.id);
+            insertarUsuario.passN = validarPassword(e.target.id);
             comprobarInsertarUsuario();
         break;
 
@@ -98,7 +99,21 @@ const validarForm = (e) => {
 }
 
 const comprobarInsertarUsuario = function () {
-
+    if (insertarUsuario.nombre && insertarUsuario.control && insertarUsuario.passN && insertarUsuario.passN2){
+        insertarUsuario.nombre = validarCampo(expresiones.usuario, inputInsertarNombre.value, inputInsertarNombre.id);
+        insertarUsuario.control = validarCampo(expresiones.NoControl, inputInsertarControl.value, inputInsertarControl.id);
+        insertarUsuario.passN2 = validarCampo(expresiones.contra, inputInsertarPassN.value, inputInsertarPassN.id);
+        insertarUsuario.passN = validarPassword(inputInsertarPassN.id);
+        if (insertarUsuario.nombre && insertarUsuario.control && insertarUsuario.passN && insertarUsuario.passN2){
+            btnInsertarUsuario.removeAttribute('disabled');
+            return true;
+        }else{
+            btnInsertarUsuario.setAttribute('disabled','true');
+            return false;
+        }
+    }
+    btnInsertarUsuario.setAttribute('disabled','true');
+    return false;
 }
 
 const comprobarCambioContra = function () {
@@ -152,16 +167,20 @@ const comprobarTuInformacion = function () {
 
 const insertarFila = function (datos) {                       
     var fila = document.createElement('tr');
-    fila.setAttribute('data-accion', 'usuario');
-    fila.setAttribute('class', 'contenido');
-    fila.setAttribute('data-usuario', `${datos[0]}`);
     datos[6] = (datos[6] == 1 ? 'activo' : 'inactivo');
+    if (datos[6] == 'inactivo'){
+        fila.setAttribute('class', 'contenido inactivo');
+    }else{
+        fila.setAttribute('class', 'contenido');
+    }
+    fila.setAttribute('data-accion', 'usuario');
+    fila.setAttribute('data-usuario', `${datos[0]}`);
 
-    for (var i = 0; i < textos.length; i++) {
+    for (var i = 0; i < datos.length; i++) {
         var celda = document.createElement('td');
         celda.setAttribute('data-accion', 'usuario');
         celda.setAttribute('data-usuario', `${datos[0]}`);
-        celda.textContent = textos[i];
+        celda.textContent = datos[i];
 
         fila.appendChild(celda);
         tablaUsuarios.appendChild(fila);
@@ -185,6 +204,61 @@ const guardarTuInformacion = function() {
                 success: function (respuesta) {
                     if (respuesta.code === '0') {
                         window.location = '../db/cerrarSesion.php';
+                    } else {
+                        // La operación en el servidor no fue exitosa
+                        alert(respuesta.message);
+                    }
+                },
+                error: function (error) {
+                    // Manejar errores en la solicitud AJAX
+                    console.log('Error en la solicitud AJAX:', error.responseText);
+                }
+            });
+        }
+    }
+}
+
+const agregarUsuario = function (){
+    if (comprobarInsertarUsuario()){
+        if (confirm('estas seguro que la información es correcta?')){
+            const formData = new FormData();
+            formData.append('usuario','insertar');
+            formData.append('nombre', inputInsertarNombre.value);
+            formData.append('control', inputInsertarControl.value);
+            formData.append('rol', selectInsertarRol.value);
+            formData.append('contra', inputInsertarPassN.value);
+            formData.append('id_user', id_user);
+            $.ajax({
+                url: '../db/consultas.php',
+                type: 'POST',
+                dataType: 'json',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (respuesta) {
+                    console.log('.');
+                    if (respuesta.code === '0') {
+                        tablaUsuarios.innerHTML = '';
+                        for (var i = 0; i < respuesta.datos.length; i++) {
+                            let textos = [
+                                respuesta.datos[i].eCodeUsuario,
+                                respuesta.datos[i].tNombreUsuario,
+                                respuesta.datos[i].tNumControlUsuario,
+                                respuesta.datos[i].tRolUsuario,
+                                respuesta.datos[i].fCreateUsuario,
+                                respuesta.datos[i].fUpdateUsuario,
+                                respuesta.datos[i].bEstadoUsuario
+                            ];
+                            
+                            insertarFila(textos);
+                        }
+                        inputInsertarNombre.value = '';
+                        inputInsertarControl.value = '';
+                        inputInsertarPassN.value = '';
+                        inputInsertarPassN2.value = '';
+                        selectInsertarRol.selectedIndex = -1;
+                        document.querySelector('#insertarUsuario .modal-footer button.btn-secondary').click();
+                        activarEscuchadoresMenuDesplegable();
                     } else {
                         // La operación en el servidor no fue exitosa
                         alert(respuesta.message);
@@ -305,8 +379,8 @@ const activarMenuDesplegable = function (e) {
         });
     }
     menuDesplegable.style.display = 'block';
-    menuDesplegable.style.left = e.clientX + 'px';
-    menuDesplegable.style.top = e.clientY + 'px';
+    menuDesplegable.style.left = e.pageX + 'px';
+    menuDesplegable.style.top = e.pageY + 'px';
 }
 
 const GuardarCambios = function () {
@@ -336,8 +410,7 @@ const GuardarCambios = function () {
                         editarUsuario.nombre = false;
                         inputControl.value = '';
                         inputNombre.value = '';
-                        document.querySelector(`${selectRol.tagName.toLowerCase()} option[value="1"]`).removeAttribute('selected');
-                        document.querySelector(`${selectRol.tagName.toLowerCase()} option[value="2"]`).removeAttribute('selected');
+                        selectRol.seletedIndex = -1;
                         document.querySelector('#editarUsuario .modal-footer button.btn-secondary').click();
                         tablaUsuarios.innerHTML = '';
                         for (var i = 0; i < respuesta.datos.length; i++) {
@@ -459,8 +532,16 @@ inputs.forEach((input)=>{
 btnShow.forEach((element) => {
     element.addEventListener('click', cambiarVisualizacionContra)
 });
+btnInsertarUsuario.addEventListener('click', agregarUsuario);
 btnCambiarContra.addEventListener('click', guardarContra);
 selectRol.addEventListener('change', comprobarInfoUsuario);
 btnGuardarCambios.addEventListener('click', GuardarCambios);
 comprobarTuInformacion();
 activarEscuchadoresMenuDesplegable();
+
+$(document).ready( function () {
+    $('#tabla-usuarios').DataTable();
+} );
+$(document).ready( function () {
+    $('#tabla-historial').DataTable();
+} );

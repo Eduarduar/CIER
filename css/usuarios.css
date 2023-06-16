@@ -19,6 +19,10 @@
     padding: 1rem;
 }
 
+#tabla-usuarios_wrapper {
+    margin-top: 2rem;
+}
+
 .no-arrows::-webkit-inner-spin-button,
 .no-arrows::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -62,4 +66,21 @@
 #tabla_usuarios .contenido:hover td{
     transition: .3s !important;
     background: #cccccc;
+}
+
+#tabla_usuarios .inactivo td {
+    background: #dc6767;
+    color: #fff;
+}
+#tabla_usuarios .inactivo:hover td {
+    background: #ec4a4a;
+}
+
+.container-buttons-tabla {
+    display: flex;
+    justify-content: start;
+}
+
+.container-buttons-tabla button {
+    margin-left: 1rem;
 }
