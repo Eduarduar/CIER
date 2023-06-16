@@ -77,7 +77,7 @@
                                 <th scope="col">Estado</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tabla_usuarios">
                             <?php
                                 $usuarios = $consulta->consultar("SELECT u.eCodeUsuarios, u.tNombreUsuarios, u.tNumControlUsuarios, r.tNombreRol AS tRolUsuarios, u.fCreateUsuarios, u.fUpdateUsuarios, u.bEstadoUsuarios
                                 FROM usuarios u
@@ -101,7 +101,14 @@
                                                 } 
                                                 
                                                 ?></td>
-                                                <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php echo $usuario['bEstadoUsuarios']; ?></td>
+                                                <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php 
+                                                    
+                                                    if ($usuario['bEstadoUsuarios'] == 1){
+                                                        echo 'activo';
+                                                    }else{
+                                                        echo 'inactivo';
+                                                    }
+                                                ?></td>
                                             </tr>
                                         <?php
                                     }
@@ -123,6 +130,38 @@
         <div id="menuDesplegable" class="menu">
             <ul>
             </ul>
+        </div>
+
+        <div class="modal fade" id="editarUsuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Usuario <br> [usuario prueba] </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="usuario-nombre" class="form-label">Nombre:</label>
+                        <input type="text" class="form-control" name="usuario-nombre" id="usuario-nombre">
+                    </div>
+                    <div class="mb-3">
+                        <label for="usuario-control" class="form-label">No. Control</label>
+                        <input type="number" class="form-control no-arrows" name="usuario-control" id="usuario-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="usuario-rol" class="form-label">Rol</label>
+                        <select name="usuario-rol" id="usuario-rol" class="form-select">
+                            <option value="1">Administrador</option>
+                            <option value="2">Coordinador</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
         </div>
 
         <script>
