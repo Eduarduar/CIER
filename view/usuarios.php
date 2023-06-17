@@ -46,7 +46,7 @@
 
             <div class="container-center main">
                     
-                <div class="container-users table-responsive">
+                <div class="container-users">
                     <div class="container-subTitulo">
                         <h2>Usuarios</h2>
                         <div class="container-buttons-tabla">
@@ -54,20 +54,21 @@
                         <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#insertarUsuario"><span class="fa fa-plus" aria-hidden="true"></span>  Agregar usuario</button>
                         </div>
                     </div>
-                    <table class="table" id="tabla-usuarios" data-accion="insert-usuario">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Nombre</th>
-                                <th scope="col">No.Control</th>
-                                <th scope="col">Rol</th>
-                                <th scope="col">Creado</th>
-                                <th scope="col">Update</th>
-                                <th scope="col">Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla_usuarios">
-                            <?php
+                    <div clas="">
+                        <table class="table" id="tabla-usuarios" data-accion="insert-usuario">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">No.Control</th>
+                                    <th scope="col">Rol</th>
+                                    <th scope="col">Creado</th>
+                                    <th scope="col">Update</th>
+                                    <th scope="col">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla_usuarios">
+                                <?php
                                 $usuarios = $consulta->consultar("SELECT u.eCodeUsuarios, u.tNombreUsuarios, u.tNumControlUsuarios, r.tNombreRol AS tRolUsuarios, u.fCreateUsuarios, u.fUpdateUsuarios, u.bEstadoUsuarios
                                 FROM usuarios u
                                 INNER JOIN roles r ON u.eRolUsuarios = r.eCodeRol
@@ -77,11 +78,11 @@
                                         ?>
                                             <tr data-accion="usuario" class="contenido <?php
                                             
-                                                if ($usuario['bEstadoUsuarios'] == 0){
-
-                                                    echo 'inactivo';
-                                                }
-
+                                            if ($usuario['bEstadoUsuarios'] == 0){
+                                                
+                                                echo 'inactivo';
+                                            }
+                                            
                                             ?>" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>" >
                                                 <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php echo $usuario['eCodeUsuarios']; ?></td>
                                                 <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php echo $usuario['tNombreUsuarios']; ?></td>
@@ -104,87 +105,64 @@
                                                     }else{
                                                         echo 'inactivo';
                                                     }
-                                                ?></td>
+                                                    ?></td>
                                             </tr>
-                                        <?php
+                                            <?php
                                     }
                                 }else{
                                     ?>
-                                        <tr class="contenido">
+                                        <tr>
                                             <td colspan="7"  data-accion="usuario" class="noUsuarios">No hay mas usuarios</td>
                                         </tr>
-                                    <?php
+                                        <?php
                                 }
                                 ?>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <div class="container-tabla-historial">
-                    <table class="table" >
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Nombre</th>
-                                <th scope="col">No.Control</th>
-                                <th scope="col">Rol</th>
-                                <th scope="col">Creado</th>
-                                <th scope="col">Update</th>
-                                <th scope="col">Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla_usuarios">
-                            <?php
-                                $usuarios = $consulta->consultar("SELECT u.eCodeUsuarios, u.tNombreUsuarios, u.tNumControlUsuarios, r.tNombreRol AS tRolUsuarios, u.fCreateUsuarios, u.fUpdateUsuarios, u.bEstadoUsuarios
-                                FROM usuarios u
-                                INNER JOIN roles r ON u.eRolUsuarios = r.eCodeRol
-                                WHERE u.eCodeUsuarios <> $id_user ORDER BY u.eCodeUsuarios;");
+                    <div class="container-subTitulo">
+                        <h2>Historial</h2>
+                    </div>
+                    <div class="">
+                        <table class="table" id="tabla-historial">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">acción</th>
+                                    <th scope="col">Usuario</th>
+                                    <th scope="col">Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla_historial">
+                                <?php
+                                $registros = $consulta->consultar("SELECT h.eCodeHistorial, h.tAccionHistorial, u.tNombreUsuarios AS nombreUsuario, u.tNumControlUsuarios AS numeroControlUsuario, h.fCreateHistorial
+                                FROM historial h
+                                INNER JOIN usuarios u ON h.eUsuarioHistorial = u.eCodeUsuarios ORDER BY eCodeHistorial DESC;");
                                 if ($usuarios->rowCount()){
-                                    foreach($usuarios as $usuario){
+                                    foreach($registros as $registro){
                                         ?>
-                                            <tr data-accion="usuario" class="contenido <?php
-                                            
-                                                if ($usuario['bEstadoUsuarios'] == 0){
-
-                                                    echo 'inactivo';
-                                                }
-
-                                            ?>" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>" >
-                                                <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php echo $usuario['eCodeUsuarios']; ?></td>
-                                                <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php echo $usuario['tNombreUsuarios']; ?></td>
-                                                <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php echo $usuario['tNumControlUsuarios']; ?></td>
-                                                <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php echo $usuario['tRolUsuarios']; ?></td>
-                                                <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php echo $usuario['fCreateUsuarios']; ?></td>
-                                                <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php 
-                                                
-                                                if ($usuario['fUpdateUsuarios'] == ''){
-                                                    echo '-----';
-                                                }else{
-                                                    echo $usuario['fUpdateUsuarios'];   
-                                                } 
-                                                
-                                                ?></td>
-                                                <td data-accion="usuario" data-usuario="<?php echo $usuario['eCodeUsuarios']; ?>"><?php 
-                                                    
-                                                    if ($usuario['bEstadoUsuarios'] == 1){
-                                                        echo 'activo';
-                                                    }else{
-                                                        echo 'inactivo';
-                                                    }
-                                                ?></td>
+                                            <tr>
+                                                <td><?php echo $registro['eCodeHistorial']; ?></td>
+                                                <td><?php echo $registro['tAccionHistorial']; ?></td>
+                                                <td><?php echo $registro['nombreUsuario'] . " - " . $registro['numeroControlUsuario']; ?></td>
+                                                <td><?php echo $registro['fCreateHistorial']; ?></td>
                                             </tr>
-                                        <?php
+                                            <?php
                                     }
                                 }else{
                                     ?>
-                                        <tr class="contenido">
-                                            <td colspan="7"  data-accion="usuario" class="noUsuarios">No hay mas usuarios</td>
+                                        <tr>
+                                            <td colspan="4" class="noUsuarios">No hay acciones registradas</td>
                                         </tr>
-                                    <?php
+                                        <?php
                                 }
                                 ?>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
             </div>

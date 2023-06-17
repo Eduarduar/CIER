@@ -4,6 +4,7 @@ const inputTuControl = document.querySelector('#tu-control');
 const btnGuardarTuInformacion = document.querySelector('.container-infoUser .btn.btn-outline-success');
 const menuDesplegable = document.querySelector('#menuDesplegable');
 const tablaUsuarios = document.querySelector('#tabla_usuarios');
+const tablaHistorial = document.querySelector('#tabla_historial');
 const inputNombre = document.querySelector('#usuario-nombre');
 const inputControl = document.querySelector('#usuario-control');
 const selectRol = document.querySelector('#usuario-rol');
@@ -186,6 +187,17 @@ const insertarFila = function (datos) {
         tablaUsuarios.appendChild(fila);
     }
 }
+const insertarHistorial = function (datos) {                       
+    var fila = document.createElement('tr');
+
+    for (var i = 0; i < datos.length; i++) {
+        var celda = document.createElement('td');
+        celda.textContent = datos[i];
+
+        fila.appendChild(celda);
+        tablaHistorial.prepend(fila);
+    }
+}
 
 const guardarTuInformacion = function() {
     if (comprobarTuInformacion()){
@@ -204,6 +216,7 @@ const guardarTuInformacion = function() {
                 success: function (respuesta) {
                     if (respuesta.code === '0') {
                         window.location = '../db/cerrarSesion.php';
+                        actualizarHistorial();
                     } else {
                         // La operación en el servidor no fue exitosa
                         alert(respuesta.message);
@@ -238,7 +251,6 @@ const agregarUsuario = function (){
                 success: function (respuesta) {
                     console.log('.');
                     if (respuesta.code === '0') {
-                        tablaUsuarios.innerHTML = '';
                         for (var i = 0; i < respuesta.datos.length; i++) {
                             let textos = [
                                 respuesta.datos[i].eCodeUsuario,
@@ -246,7 +258,7 @@ const agregarUsuario = function (){
                                 respuesta.datos[i].tNumControlUsuario,
                                 respuesta.datos[i].tRolUsuario,
                                 respuesta.datos[i].fCreateUsuario,
-                                respuesta.datos[i].fUpdateUsuario,
+                                '-----',
                                 respuesta.datos[i].bEstadoUsuario
                             ];
                             
@@ -259,6 +271,7 @@ const agregarUsuario = function (){
                         selectInsertarRol.selectedIndex = -1;
                         document.querySelector('#insertarUsuario .modal-footer button.btn-secondary').click();
                         activarEscuchadoresMenuDesplegable();
+                        actualizarHistorial();
                     } else {
                         // La operación en el servidor no fue exitosa
                         alert(respuesta.message);
@@ -367,6 +380,7 @@ const activarMenuDesplegable = function (e) {
                             insertarFila(textos);
                         }
                         activarEscuchadoresMenuDesplegable();
+                        actualizarHistorial();
                     } else {
                         // La operación en el servidor no fue exitosa
                         alert(respuesta.message);
@@ -427,6 +441,7 @@ const GuardarCambios = function () {
                             insertarFila(textos);
                         }
                         activarEscuchadoresMenuDesplegable();
+                        actualizarHistorial();
                     } else {
                         // La operación en el servidor no fue exitosa
                         alert(respuesta.message);
@@ -463,6 +478,7 @@ const guardarContra = function () {
                         inputPassA.classList.remove('is-valid');
                         inputPassN2.classList.remove('is-valid');
                         inputPassN.classList.remove('is-valid');
+                        actualizarHistorial();
                     } else if (respuesta.code === '1'){
                         alert(respuesta.message);
                     }else if (respuesta.code === '3'){
@@ -489,6 +505,35 @@ const guardarContra = function () {
             }});
         }
     }
+}
+
+const actualizarHistorial = function () {
+    const formData = new FormData();
+    formData.append('historial', '1');
+    $.ajax({
+        url: '../db/consultas.php',
+        type: 'POST',
+        dataType: 'json',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (respuesta) {
+            if (respuesta.code === '0') {
+                for (var i = 0; i < respuesta.datos.length; i++) {
+                    textos = [
+                        respuesta.datos[i].eCodeHistorial,
+                        respuesta.datos[i].tAccionHistorial,
+                        respuesta.datos[i].eUsuarioHistorial,
+                        respuesta.datos[i].fCreateHistorial
+                    ];
+                    insertarHistorial(textos);
+                }
+            }
+        },
+        error: function (error) {
+            // Manejar errores en la solicitud AJAX
+            console.log('Error en la solicitud AJAX:', error.responseText);
+    }});
 }
 
 const cambiarVisualizacionContra = function (e) {
@@ -540,8 +585,11 @@ comprobarTuInformacion();
 activarEscuchadoresMenuDesplegable();
 
 $(document).ready( function () {
+    $('#tabla-historial').DataTable({
+        order: [[0, 'desc']]
+    });
     $('#tabla-usuarios').DataTable();
+    document.querySelector('#tabla-usuarios').parentNode.classList.add('table-responsive');
+    document.querySelector('#tabla-historial').parentNode.classList.add('table-responsive');
 } );
-$(document).ready( function () {
-    $('#tabla-historial').DataTable();
-} );
+
