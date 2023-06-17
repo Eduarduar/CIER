@@ -14,7 +14,7 @@
     margin-bottom: 1rem;
 }
 
-.container-users {
+.container-users, .container-tabla-historial {
     border-top: #000 solid 2px;
     padding: 1rem;
 }
@@ -75,6 +75,9 @@
 #tabla_usuarios .inactivo:hover td {
     background: #ec4a4a;
 }
+#tabla-usuarios, #tabla-historial {
+    min-width: 600px;
+}
 
 .container-buttons-tabla {
     display: flex;
@@ -83,4 +86,14 @@
 
 .container-buttons-tabla button {
     margin-left: 1rem;
+}
+
+div.row {
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+}
+
+.row > .col-sm-12.col-md-6 {
+    margin-top: .5rem;
 }

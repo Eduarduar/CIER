@@ -26,11 +26,29 @@
                 }
 
                 if (password_verify($md5, $tContraUsuario)){
+                    $historial = ['accion' => 'Inicio sesión', 'id' => $datos['eCodeUsuario']];
+                    $this->setHistorial($historial);
                     return $datos;
                 }
                 return false;
             }
             return false;
+        }
+
+        public function setHistorial($historial) {
+            $accion = $historial['accion'];
+            $id = $historial['id'];
+            if (isset($historial['id2'])){
+                $id2 = $historial['id2'];
+                $respuesta = $this->connect()->query("SELECT tNombreUsuarios FROM usuarios WHERE eCodeUsuarios = $id2");
+                foreach($respuesta as $info){
+                    $nombre = $info['tNombreUsuarios'];
+                }
+                $accion = $historial['accion'] . $nombre;
+            }else{
+                $accion = $historial['accion'];
+            }
+            $this->connect()->query("INSERT INTO historial VALUES (NULL, '$accion', $id, CURRENT_TIMESTAMP);");
         }
 
         public function consultar($consulta){
@@ -67,6 +85,27 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // consultas de la pagina usuarios ----------------------------------------------------------------------------------------------------------------
+
+        if (isset($_POST['historial'])){
+            $historial = $consulta->consultar("SELECT h.eCodeHistorial, h.tAccionHistorial, u.tNombreUsuarios AS nombreUsuario, u.tNumControlUsuarios AS numeroControlUsuario, h.fCreateHistorial
+            FROM historial h
+            INNER JOIN usuarios u ON h.eUsuarioHistorial = u.eCodeUsuarios ORDER BY eCodeHistorial DESC LIMIT 1;");
+            $datos = array();
+            if ($historial->rowCount()){
+                foreach($historial as $registro){
+                    $datos[] = [
+                        'eCodeHistorial' => $registro['eCodeHistorial'],
+                        'tAccionHistorial' => $registro['tAccionHistorial'],
+                        'tUsuarioHistorial' => $registro['nombreUsuario'],
+                        'fCreateHistorial' => $registro['fCreateHistorial']
+                    ];
+                }
+                $resp = array('code' => '0', 'message' => 'Operación exitosa', 'datos' => $datos);
+            }else{
+                $resp = array('code' => '1', 'message' => 'No hay historial');
+            }
+            echo json_encode($resp);
+        }
 
         if (isset($_POST['usuario'])){
             switch($_POST['usuario']){
@@ -119,6 +158,8 @@
                                             'bEstadoUsuario' => $usuario['bEstadoUsuarios']
                                         );
                                     }
+                                    $historial = ['accion' => 'Cambio el estado  de ', 'id' => $id_user, 'id2' => $id];
+                                    $consulta->setHistorial($historial);
                                     $resp = array('code' => '0', 'message' => 'El usuario a sido actualizado', 'datos' => $datos);
                                 }
                             }else{
@@ -165,6 +206,8 @@
                                                 'bEstadoUsuario' => $usuario['bEstadoUsuarios']
                                             );
                                         }
+                                        $historial = ['accion' => 'Actualizo la infomación de ', 'id' => $id_user, 'id2' => $id];
+                                        $consulta->setHistorial($historial);
                                         $resp = array('code' => '0', 'message' => 'El usuario a sido actualizado', 'datos' => $datos);
                                     }
                                 }else{
@@ -194,7 +237,7 @@
                                 $usuarios = $consulta->consultar("SELECT u.eCodeUsuarios, u.tNombreUsuarios, u.tNumControlUsuarios, r.tNombreRol AS tRolUsuarios, u.fCreateUsuarios, u.fUpdateUsuarios, u.bEstadoUsuarios
                                 FROM usuarios u
                                 INNER JOIN roles r ON u.eRolUsuarios = r.eCodeRol
-                                WHERE u.eCodeUsuarios <> $id_user ORDER BY u.eCodeUsuarios;");
+                                WHERE u.eCodeUsuarios <> $id_user ORDER BY u.eCodeUsuarios DESC LIMIT 1;");
     
                                 $datos = array();
 
@@ -211,6 +254,8 @@
                                         );
                                     }
                                 }
+                                $historial = ['accion' => 'Agrego al usuario ['. $nombre . ' - ' . $control . ']', 'id' => $id_user];
+                                $consulta->setHistorial($historial);
                                 $resp = array('code' => '0', 'message' => 'Usuario agregado correctamente', 'datos' => $datos);
                             }else{
                                 $resp = array('code' => '1', 'message' => 'Algo salio mal, al intentar insertar el usuario');
@@ -238,6 +283,8 @@
                         $passHash = password_hash($passN, PASSWORD_DEFAULT, ['cost' => 10]);
                         if ($consulta->consultarConfirmar("UPDATE usuarios SET tContraUsuarios = '$passHash' WHERE eCodeUsuarios = $id_user;")){
                             $resp = array('code' => '0', 'message' => 'Se cambio la contraseña correctamente');
+                            $historial = ['accion' => 'cambio su propia contraseña', 'id' => $id_user];
+                            $consulta->setHistorial($historial);
                         }else{
                             $resp = array('code' => '1', 'message' => 'algo a salido mal al intentar actualizar la contraseña');
                         }
@@ -263,6 +310,8 @@
             }else{
                 if ($consulta->consultarConfirmar("UPDATE usuarios SET tNombreUsuarios = '$nombre', tNumControlUsuarios = $control, fUpdateUsuarios = CURRENT_TIMESTAMP WHERE eCodeUsuarios = $id_user;")){
                     $resp = array('code' => '0', 'message' => 'se actualizo correctamente los datos');
+                    $historial = ['accion' => 'Actualizo su propia información', 'id' => $id_user];
+                    $consulta->setHistorial($historial);
                 }else{
                     $resp = array('code' => '1', 'message' => 'algo a salido mal al intentar actualizar los datos');
                 }
@@ -280,6 +329,8 @@
                 $resp = array('code' => '1', 'message' => 'algo a salido mal al intentar eliminar la publicación');
             }else{
                 $resp = array('code' => '0', 'message' => 'publicación eliminada exitosamente');
+                $historial = ['accion' => 'Republico una publicación', 'id' => $id_user];
+                $consulta->setHistorial($historial);
                 
             }
             echo json_encode($resp);
@@ -338,6 +389,8 @@
                 $resp = array('code' => '1', 'message' => 'algo a salido mal al intentar eliminar la publicación');
             }else{
                 $resp = array('code' => '0', 'message' => 'publicación eliminada exitosamente');
+                $historial = ['accion' => 'Deshabilito una publicación', 'id' => $id_user];
+                $consulta->setHistorial($historial);
                 
             }
             echo json_encode($resp);
@@ -416,49 +469,54 @@
             }
 
             
-            
-            // Insertar la información de la publicación en la base de datos
-            if (!$consulta->consultarConfirmar("INSERT INTO publicaciones VALUES (NULL, $id_user, '$text', '$destino_img', '$destino_pdf', $tipo, CURRENT_TIMESTAMP, NULL, NULL, 1);")) {
-                if ($mensaje == 'Operacion exitosa'){
-                    $mensaje = 'Error al subir la imagen';
-                }else{
-                    $mensaje .= ' Error al intentar publicar';
-                }
-                $code = '1';
-            }
-            
-            $publicacion = $consulta->consultar("SELECT p.eCodePublicaciones, u.tNombreUsuarios, p.tMensajePublicaciones, p.tImgPublicaciones, p.tPdfPublicaciones, t.tNombreTipoPublicaciones, p.fCreatePublicaciones, p.fUpdatePublicaciones, u2.tNombreUsuarios AS tNombreUsuariosUpdate
-            FROM publicaciones p
-            INNER JOIN usuarios u ON p.eUserPublicaciones = u.eCodeUsuarios
-            INNER JOIN tipopublicaciones t ON p.eTipoPublicaciones = t.eCodeTipoPublicaciones
-            LEFT JOIN usuarios u2 ON p.eUpdatePublicaciones = u2.eCodeUsuarios
-            WHERE p.bEstadoPublicaciones = 1
-            ORDER BY
-            p.eCodePublicaciones DESC
-            LIMIT 1;");
-            if ($publicacion->rowCount()){
-                foreach($publicacion as $info){
-                    $datos = [
-                        'publicacion'   => $info['eCodePublicaciones'],
-                        'usuario'       => $info['tNombreUsuarios'],
-                        'tipo'          => $info['tNombreTipoPublicaciones'],
-                        'text'          => $info['tMensajePublicaciones'],
-                        'img'           => $info['tImgPublicaciones'],
-                        'pdf'           => $info['tPdfPublicaciones'],
-                        'create'        => $info['fCreatePublicaciones'],
-                        'update'        => $info['fUpdatePublicaciones'],
-                        'nameUpdate'    => $info['tNombreUsuariosUpdate'],
-                        'consulta'      => 'publicadas'
-                    ];
-                }
-            }
+            if ($code != '1'){
 
+                // Insertar la información de la publicación en la base de datos
+                if (!$consulta->consultarConfirmar("INSERT INTO publicaciones VALUES (NULL, $id_user, '$text', '$destino_img', '$destino_pdf', $tipo, CURRENT_TIMESTAMP, NULL, NULL, 1);")) {
+                    if ($mensaje == 'Operacion exitosa'){
+                        $mensaje = 'Error al subir la imagen';
+                    }else{
+                        $mensaje .= ' Error al intentar publicar';
+                    }
+                    $code = '1';
+                }
+                
+                $publicacion = $consulta->consultar("SELECT p.eCodePublicaciones, u.tNombreUsuarios, p.tMensajePublicaciones, p.tImgPublicaciones, p.tPdfPublicaciones, t.tNombreTipoPublicaciones, p.fCreatePublicaciones, p.fUpdatePublicaciones, u2.tNombreUsuarios AS tNombreUsuariosUpdate
+                FROM publicaciones p
+                INNER JOIN usuarios u ON p.eUserPublicaciones = u.eCodeUsuarios
+                INNER JOIN tipopublicaciones t ON p.eTipoPublicaciones = t.eCodeTipoPublicaciones
+                LEFT JOIN usuarios u2 ON p.eUpdatePublicaciones = u2.eCodeUsuarios
+                WHERE p.bEstadoPublicaciones = 1
+                ORDER BY
+                p.eCodePublicaciones DESC
+                LIMIT 1;");
+                if ($publicacion->rowCount()){
+                    foreach($publicacion as $info){
+                        $datos = [
+                            'publicacion'   => $info['eCodePublicaciones'],
+                            'usuario'       => $info['tNombreUsuarios'],
+                            'tipo'          => $info['tNombreTipoPublicaciones'],
+                            'text'          => $info['tMensajePublicaciones'],
+                            'img'           => $info['tImgPublicaciones'],
+                            'pdf'           => $info['tPdfPublicaciones'],
+                            'create'        => $info['fCreatePublicaciones'],
+                            'update'        => $info['fUpdatePublicaciones'],
+                            'nameUpdate'    => $info['tNombreUsuariosUpdate'],
+                            'consulta'      => 'publicadas'
+                        ];
+                    }
+                }
+
+                if ($code != '1'){
+                    $historial = ['accion' => 'Agrego una nueva publicación', 'id' => $id_user];
+                    $consulta->setHistorial($historial);
+                }
+            
+            }
             $resp = array('code' => $code, 'message' => $mensaje, 'datos' => $datos);
             echo json_encode($resp);
                 
         }
             
     }
-
-    // consulta de la pagina de usuarios ------------------------------------------------------------------------------------------------------------
 ?>

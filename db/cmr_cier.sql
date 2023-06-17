@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-06-2023 a las 23:52:20
+-- Tiempo de generación: 17-06-2023 a las 03:47:29
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -24,6 +24,19 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `historial`
+--
+
+CREATE TABLE `historial` (
+  `eCodeHistorial` int(11) NOT NULL,
+  `tAccionHistorial` varchar(100) NOT NULL,
+  `eUsuarioHistorial` int(11) NOT NULL,
+  `fCreateHistorial` date NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `publicaciones`
 --
 
@@ -39,6 +52,16 @@ CREATE TABLE `publicaciones` (
   `eUpdatePublicaciones` int(11) DEFAULT current_timestamp(),
   `bEstadoPublicaciones` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `publicaciones`
+--
+
+INSERT INTO `publicaciones` (`eCodePublicaciones`, `eUserPublicaciones`, `tMensajePublicaciones`, `tImgPublicaciones`, `tPdfPublicaciones`, `eTipoPublicaciones`, `fCreatePublicaciones`, `fUpdatePublicaciones`, `eUpdatePublicaciones`, `bEstadoPublicaciones`) VALUES
+(101, 2, 'asdlkvmasdñlvkmasdlñ', '../src/img/Cfaa4HDT2BwBPbJ.jpeg', '../src/pdf/6DbX2Url3EvmwDe.pdf', 3, '2023-06-14', '2023-06-14', 2, 1),
+(102, 2, 'cd', '', '', 1, '2023-06-14', '2023-06-14', 2, 1),
+(103, 2, 'djvnalksdnvaklsdv', '', '', 1, '2023-06-14', '2023-06-14', 2, 0),
+(104, 2, 'askljvnasdkjvn', '../src/img/ZwkRp4fybEJTWlk.jpg', '../src/pdf/BuQCzGgoWh0HvhH.pdf', 4, '2023-06-15', '2023-06-15', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -103,11 +126,23 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`eCodeUsuarios`, `tNombreUsuarios`, `tNumControlUsuarios`, `tContraUsuarios`, `eRolUsuarios`, `fCreateUsuarios`, `fUpdateUsuarios`, `bEstadoUsuarios`) VALUES
-(2, 'Eduarduar', '1515', '$2y$10$3h6tRkNb0/uQy0IRaR2OJu5gBASR3gYIvHZHzXXAYKtSTKk9XH9GG', 1, '0000-00-00', '0000-00-00', 1);
+(2, 'Eduardo', '1510', '$2y$10$tlmsGYicDw2kIYnzeYuV3ePvvTaL.D8CCV/4YgjQPyvaP5SYJM4f6', 1, '2023-06-11', '2023-06-16', 1),
+(3, 'Saul Elizandro Madrigal Ortega', '2020', '$2y$10$3h6tRkNb0/uQy0IRaR2OJu5gBASR3gYIvHZHzXXAYKtSTKk9XH9GG', 1, '2023-06-15', '2023-06-16', 0),
+(4, 'Marco Dair Martin Rojo', '1112', '$2y$10$3h6tRkNb0/uQy0IRaR2OJu5gBASR3gYIvHZHzXXAYKtSTKk9XH9GG', 1, '2023-06-15', '2023-06-16', 0),
+(5, 'Víctor Manuel Cárdenas Galindo', '3131', '$2y$10$3h6tRkNb0/uQy0IRaR2OJu5gBASR3gYIvHZHzXXAYKtSTKk9XH9GG', 1, '2023-06-15', '2023-06-16', 1),
+(6, 'Roberto Olgeda', '1110', '$2y$10$rS6CSY7GQPMUGlUrJmSKnOthDg.LxJNi1XegJQ9dutaECz57Bn/mS', 2, '2023-06-16', NULL, 1),
+(7, 'Jesus Ramirez', '0111', '$2y$10$YjT2F6aLesnLdm3u0l2OKuvJwEPmn9aSia3QXX.COb3MMACCsAkgO', 1, '2023-06-16', '2023-06-16', 1),
+(8, 'Maria Jose', '3210', '$2y$10$f988qBWnooiptlOEujmbdeJLFolzjjK1RwWdzsKlLHj3suWnCRM42', 2, '2023-06-16', '2023-06-16', 1);
 
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `historial`
+--
+ALTER TABLE `historial`
+  ADD PRIMARY KEY (`eCodeHistorial`);
 
 --
 -- Indices de la tabla `publicaciones`
@@ -142,10 +177,16 @@ ALTER TABLE `usuarios`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `historial`
+--
+ALTER TABLE `historial`
+  MODIFY `eCodeHistorial` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `publicaciones`
 --
 ALTER TABLE `publicaciones`
-  MODIFY `eCodePublicaciones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+  MODIFY `eCodePublicaciones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
@@ -163,7 +204,7 @@ ALTER TABLE `tipopublicaciones`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `eCodeUsuarios` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `eCodeUsuarios` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Restricciones para tablas volcadas
