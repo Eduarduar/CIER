@@ -303,7 +303,7 @@
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar usuario</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">                         
+                    <div class="modal-body">
                         <div class="container-infoUser">
                             <h2>Tu información</h2>
                             <div class="mb-3">

@@ -16,7 +16,7 @@
     display: flex;
     justify-content:space-evenly;
     flex-wrap: wrap;
-    width: 40%;
+    width: 60%;
     margin-top: 5rem;
     margin: 0 auto;
     padding: 1rem;
@@ -54,9 +54,20 @@
     padding: 1rem;
 }
 
+.publicador-text{
+    max-width: 1065px;
+}
+
+.publicacion_text p {
+    width: auto;
+    word-wrap: break-word;
+    text-align: start;
+    text-justify: auto;
+}
+
 .publicacion_img img {
-    max-width: 500px;
-    width: 100%;
+    max-width: 100%;
+    width: auto;
     border-radius: 10px;
     padding: 1rem;
 }

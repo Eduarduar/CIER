@@ -207,7 +207,7 @@ const guardarTuInformacion = function() {
             formData.append('tuNombre', inputTuNombre.value);
             formData.append('id_user', id_user);
             $.ajax({
-                url: '../db/consultas.php',
+                url: '../db/consultas_usuarios.php',
                 type: 'POST',
                 dataType: 'json',
                 data: formData,
@@ -242,7 +242,7 @@ const agregarUsuario = function (){
             formData.append('contra', inputInsertarPassN.value);
             formData.append('id_user', id_user);
             $.ajax({
-                url: '../db/consultas.php',
+                url: '../db/consultas_usuarios.php',
                 type: 'POST',
                 dataType: 'json',
                 data: formData,
@@ -313,7 +313,7 @@ const activarMenuDesplegable = function (e) {
             formData.append('usuario', 'getUser');
             formData.append('usuario_id', e.target.dataset.usuario);
             $.ajax({
-                url: '../db/consultas.php',
+                url: '../db/consultas_usuarios.php',
                 type: 'POST',
                 dataType: 'json',
                 data: formData,
@@ -357,7 +357,7 @@ const activarMenuDesplegable = function (e) {
             formData.append('usuario_id', e.target.dataset.usuario);
             formData.append('id_user', id_user);
             $.ajax({
-                url: '../db/consultas.php',
+                url: '../db/consultas_usuarios.php',
                 type: 'POST',
                 dataType: 'json',
                 data: formData,
@@ -408,7 +408,7 @@ const GuardarCambios = function () {
             formData.append('usuario_id', editarUsuario.iduser)
             formData.append('id_user', id_user);
             $.ajax({
-                url: '../db/consultas.php',
+                url: '../db/consultas_usuarios.php',
                 type: 'POST',
                 dataType: 'json',
                 data: formData,
@@ -463,7 +463,7 @@ const guardarContra = function () {
             formData.append('passN', inputPassN.value);
             formData.append('id_user', id_user);
             $.ajax({
-                url: '../db/consultas.php',
+                url: '../db/consultas_usuarios.php',
                 type: 'POST',
                 dataType: 'json',
                 data: formData,
@@ -511,7 +511,7 @@ const actualizarHistorial = function () {
     const formData = new FormData();
     formData.append('historial', '1');
     $.ajax({
-        url: '../db/consultas.php',
+        url: '../db/consultas_usuarios.php',
         type: 'POST',
         dataType: 'json',
         data: formData,
