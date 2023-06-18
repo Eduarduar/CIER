@@ -27,7 +27,30 @@
 
     <main>
 
-        
+    <table class="table">
+      <tr>
+        <th>Columna 1</th>
+        <th>Columna 2</th>
+        <th>Columna 3</th>
+        <th>Columna 4</th>
+      </tr>
+      <tr>
+        <td rowspan="3">Celda Expandida</td>
+        <td>Fila 1, Columna 2</td>
+        <td>Fila 1, Columna 3</td>
+        <td>Fila 2, Columna 3</td>
+      </tr>
+      <tr>
+        <td>Fila 2, Columna 2</td>
+        <td>Fila 2, Columna 3</td>
+        <td>Fila 2, Columna 3</td>
+      </tr>
+      <tr>
+        <td>Fila 2, Columna 2</td>
+        <td>Fila 2, Columna 3</td>
+        <td>Fila 2, Columna 3</td>
+      </tr>
+    </table>
 
     </main>
 

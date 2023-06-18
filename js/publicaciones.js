@@ -452,8 +452,5 @@ const showPublicacionesEliminadas = (e) => {
     }
   });
 }
-
-
-
 document.querySelector('.container-publicador button.btn-outline-danger').addEventListener('click', showPublicacionesEliminadas);
 document.querySelector('.container-publicador button.btn-outline-success').addEventListener('click', showPublicacionesPublicadas);
