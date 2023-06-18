@@ -9,12 +9,14 @@ header {
 }
 
 header nav ul li a {
-    font-size: 9.5pt !important;
+    font-size: 8pt !important;
 }
 
 header button.btn-outline-success{
     margin-right: 1rem;
+    margin-left: .5rem;
 }
+
 header button.btn-success {
     margin-right: calc(1rem + 2px);
 }
@@ -29,7 +31,11 @@ body::-webkit-scrollbar-thumb {
 }
 
 .container-center {
-    max-width: 1400px;
+    max-width: 1600px;
     width: 100%;
     margin: 0 auto;
+}
+
+.nav-item {
+    margin-right: 0px;
 }

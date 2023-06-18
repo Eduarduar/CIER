@@ -102,7 +102,7 @@ btn_publicar.addEventListener('click', () => {
   formData.append('tipo', tipoPublicacion_select.value);
 
   $.ajax({
-    url: '../db/consultas.php',
+    url: '../db/consultas_publicaciones.php',
     type: 'POST',
     data: formData,
     contentType: false,
@@ -187,7 +187,7 @@ const activarButtons_eliminar = function() {
       formData.append('eliminar', e.target.dataset.eliminar);
       formData.append('id_user', id_user);
       $.ajax({
-        url: '../db/consultas.php',
+        url: '../db/consultas_publicaciones.php',
         type: 'POST',
         data: formData,
         contentType: false,
@@ -218,7 +218,7 @@ const desactivarButtons_eliminar = function() {
       formData.append('eliminar', e.target.dataset.eliminar);
       formData.append('id_user', id_user);
       $.ajax({
-        url: '../db/consultas.php',
+        url: '../db/consultas_publicaciones.php',
         type: 'POST',
         data: formData,
         contentType: false,
@@ -252,7 +252,7 @@ const activarButtons_publicar = function() {
       formData.append('publicar', e.target.dataset.publicar);
       formData.append('id_user', id_user);
       $.ajax({
-        url: '../db/consultas.php',
+        url: '../db/consultas_publicaciones.php',
         type: 'POST',
         data: formData,
         contentType: false,
@@ -388,7 +388,7 @@ btn_cerrarModal.addEventListener('click', () => {
 const showPublicacionesPublicadas = (e) => {
   const containerPublicaciones = document.querySelector('.container-publicaciones');
   $.ajax({
-    url: '../db/consultas.php',
+    url: '../db/consultas_publicaciones.php',
     type: 'POST',
     dataType: 'json',
     data: {
@@ -422,7 +422,7 @@ const showPublicacionesPublicadas = (e) => {
 const showPublicacionesEliminadas = (e) => {
   const containerPublicaciones = document.querySelector('.container-publicaciones');
   $.ajax({
-    url: '../db/consultas.php',
+    url: '../db/consultas_publicaciones.php',
     type: 'POST',
     dataType: 'json', // Agrega esta línea para indicar que esperas una respuesta JSON
     data: {

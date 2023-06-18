@@ -30,12 +30,13 @@
                         <li class="nav-item">
                             <a class="nav-link" href="./estancias">Estancias de investigación</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="./actividades">Actividades Diversas</a>
+                        </li>
                     </ul>
                     <?php 
                         if ($_SESSION['tRolUsuario'] === 'administrador'){
                             echo '<button class="btn btn-outline-success" id="btn_usuarios"><span class="fa fa-users" aria-hidden="true"></span></button>';
-                        }else{
-                            echo $_SESSION['tRolUsuario'];
                         }
                     ?>
                     <button class="btn btn-outline-danger" id="btn_cerrarSesion" type="button">Cerrar sesión</button>

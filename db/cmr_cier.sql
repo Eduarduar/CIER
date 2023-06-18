@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-06-2023 a las 03:47:29
+-- Tiempo de generación: 17-06-2023 a las 23:50:42
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -20,6 +20,23 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `crm_cier`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `actividades`
+--
+
+CREATE TABLE `actividades` (
+  `eCodeActividades` int(11) NOT NULL,
+  `tTituloActividades` varchar(100) NOT NULL,
+  `tImgsActividades` varchar(500) NOT NULL,
+  `fCreateActividades` date NOT NULL DEFAULT current_timestamp(),
+  `fUpdateActividades` date DEFAULT current_timestamp(),
+  `eCreateActividades` int(11) NOT NULL,
+  `eUpdateActividades` int(11) DEFAULT NULL,
+  `bEstadoActividades` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -52,16 +69,6 @@ CREATE TABLE `publicaciones` (
   `eUpdatePublicaciones` int(11) DEFAULT current_timestamp(),
   `bEstadoPublicaciones` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `publicaciones`
---
-
-INSERT INTO `publicaciones` (`eCodePublicaciones`, `eUserPublicaciones`, `tMensajePublicaciones`, `tImgPublicaciones`, `tPdfPublicaciones`, `eTipoPublicaciones`, `fCreatePublicaciones`, `fUpdatePublicaciones`, `eUpdatePublicaciones`, `bEstadoPublicaciones`) VALUES
-(101, 2, 'asdlkvmasdñlvkmasdlñ', '../src/img/Cfaa4HDT2BwBPbJ.jpeg', '../src/pdf/6DbX2Url3EvmwDe.pdf', 3, '2023-06-14', '2023-06-14', 2, 1),
-(102, 2, 'cd', '', '', 1, '2023-06-14', '2023-06-14', 2, 1),
-(103, 2, 'djvnalksdnvaklsdv', '', '', 1, '2023-06-14', '2023-06-14', 2, 0),
-(104, 2, 'askljvnasdkjvn', '../src/img/ZwkRp4fybEJTWlk.jpg', '../src/pdf/BuQCzGgoWh0HvhH.pdf', 4, '2023-06-15', '2023-06-15', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -126,23 +133,30 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`eCodeUsuarios`, `tNombreUsuarios`, `tNumControlUsuarios`, `tContraUsuarios`, `eRolUsuarios`, `fCreateUsuarios`, `fUpdateUsuarios`, `bEstadoUsuarios`) VALUES
-(2, 'Eduardo', '1510', '$2y$10$tlmsGYicDw2kIYnzeYuV3ePvvTaL.D8CCV/4YgjQPyvaP5SYJM4f6', 1, '2023-06-11', '2023-06-16', 1),
-(3, 'Saul Elizandro Madrigal Ortega', '2020', '$2y$10$3h6tRkNb0/uQy0IRaR2OJu5gBASR3gYIvHZHzXXAYKtSTKk9XH9GG', 1, '2023-06-15', '2023-06-16', 0),
-(4, 'Marco Dair Martin Rojo', '1112', '$2y$10$3h6tRkNb0/uQy0IRaR2OJu5gBASR3gYIvHZHzXXAYKtSTKk9XH9GG', 1, '2023-06-15', '2023-06-16', 0),
-(5, 'Víctor Manuel Cárdenas Galindo', '3131', '$2y$10$3h6tRkNb0/uQy0IRaR2OJu5gBASR3gYIvHZHzXXAYKtSTKk9XH9GG', 1, '2023-06-15', '2023-06-16', 1),
-(6, 'Roberto Olgeda', '1110', '$2y$10$rS6CSY7GQPMUGlUrJmSKnOthDg.LxJNi1XegJQ9dutaECz57Bn/mS', 2, '2023-06-16', NULL, 1),
-(7, 'Jesus Ramirez', '0111', '$2y$10$YjT2F6aLesnLdm3u0l2OKuvJwEPmn9aSia3QXX.COb3MMACCsAkgO', 1, '2023-06-16', '2023-06-16', 1),
-(8, 'Maria Jose', '3210', '$2y$10$f988qBWnooiptlOEujmbdeJLFolzjjK1RwWdzsKlLHj3suWnCRM42', 2, '2023-06-16', '2023-06-16', 1);
+(2, 'Eduarduar', '1510', '$2y$10$tlmsGYicDw2kIYnzeYuV3ePvvTaL.D8CCV/4YgjQPyvaP5SYJM4f6', 1, '2023-06-11', '2023-06-17', 1),
+(3, 'Saul Elizandro Madrigal Ortega', '2020', '$2y$10$3h6tRkNb0/uQy0IRaR2OJu5gBASR3gYIvHZHzXXAYKtSTKk9XH9GG', 1, '2023-06-15', '2023-06-17', 0),
+(4, 'Marco Dair Martin Rojo', '1112', '$2y$10$3h6tRkNb0/uQy0IRaR2OJu5gBASR3gYIvHZHzXXAYKtSTKk9XH9GG', 2, '2023-06-15', '2023-06-17', 0),
+(5, 'Víctor Manuel Cárdenas Galindo', '3131', '$2y$10$3h6tRkNb0/uQy0IRaR2OJu5gBASR3gYIvHZHzXXAYKtSTKk9XH9GG', 1, '2023-06-15', '2023-06-17', 1),
+(12, 'Arturo Gael Duran Díaz', '5555', '$2y$10$/gnCIlhGFo7mO4nhqCa0iumPCoH5.WtZyt/t6ry15C3mSC3BMI866', 2, '2023-06-17', NULL, 1);
 
 --
 -- Índices para tablas volcadas
 --
 
 --
+-- Indices de la tabla `actividades`
+--
+ALTER TABLE `actividades`
+  ADD PRIMARY KEY (`eCodeActividades`),
+  ADD KEY `eCreateActividades` (`eCreateActividades`),
+  ADD KEY `eUpdateActividades` (`eUpdateActividades`);
+
+--
 -- Indices de la tabla `historial`
 --
 ALTER TABLE `historial`
-  ADD PRIMARY KEY (`eCodeHistorial`);
+  ADD PRIMARY KEY (`eCodeHistorial`),
+  ADD KEY `eUsuarioHistorial` (`eUsuarioHistorial`);
 
 --
 -- Indices de la tabla `publicaciones`
@@ -177,16 +191,22 @@ ALTER TABLE `usuarios`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `actividades`
+--
+ALTER TABLE `actividades`
+  MODIFY `eCodeActividades` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `historial`
 --
 ALTER TABLE `historial`
-  MODIFY `eCodeHistorial` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `eCodeHistorial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- AUTO_INCREMENT de la tabla `publicaciones`
 --
 ALTER TABLE `publicaciones`
-  MODIFY `eCodePublicaciones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
+  MODIFY `eCodePublicaciones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
@@ -204,11 +224,24 @@ ALTER TABLE `tipopublicaciones`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `eCodeUsuarios` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `eCodeUsuarios` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `actividades`
+--
+ALTER TABLE `actividades`
+  ADD CONSTRAINT `actividades_ibfk_1` FOREIGN KEY (`eCreateActividades`) REFERENCES `usuarios` (`eCodeUsuarios`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `actividades_ibfk_2` FOREIGN KEY (`eUpdateActividades`) REFERENCES `usuarios` (`eCodeUsuarios`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `historial`
+--
+ALTER TABLE `historial`
+  ADD CONSTRAINT `historial_ibfk_1` FOREIGN KEY (`eUsuarioHistorial`) REFERENCES `usuarios` (`eCodeUsuarios`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `publicaciones`
