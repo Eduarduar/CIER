@@ -34,6 +34,7 @@
                 <div class="container-buttons">
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarActividad">Agregar Actividad</button>
                     <button class="btn btn-outline-danger">Actividades Eliminadas</button>
+                    <button class="btn btn-outline-success" style="display:none">Actividades</button>
                 </div>
 
                 <div class="container-actividades">
@@ -52,18 +53,18 @@
                             foreach ($actividades as $actividad) {
                                 
                                 ?>
-                                    <div class="container-actividad">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h2 class="card-title"><?php echo $actividad['tTituloActividades'];?></h2>
-                                                <p class="card-text">
-                                                <small class="text-body-secondary"><?php echo $actividad['eCreateActividades'];?></small><br>
-                                                <small class="text-body-secondary"><?php echo $actividad['fCreateActividades'];?></small>
+                                    <div class="container-actividad contenido" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>">
+                                        <div class="card" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>">
+                                            <div class="card-body" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>">
+                                                <h2 class="card-title" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>"><?php echo $actividad['tTituloActividades'];?></h2>
+                                                <p class="card-text" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>">
+                                                <small class="text-body-secondary" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>"><?php echo $actividad['eCreateActividades'];?></small><br>
+                                                <small class="text-body-secondary" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>"><?php echo $actividad['fCreateActividades'];?></small>
                                                 </p>
                                             </div>
-                                            <div class="card-img-bottom">
-                                                <div id="carrusel<?php echo $actividad['eCodeActividades'];?>" class="carousel slide">
-                                                <div class="carousel-indicators">
+                                            <div class="card-img-bottom" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>">
+                                                <div id="carrusel<?php echo $actividad['eCodeActividades'];?>" class="carousel slide" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>">
+                                                <div class="carousel-indicators" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>">
                                                     <?php
                                                     
                                                         $links = explode(",", $actividad['tImgsActividades']);
@@ -71,11 +72,11 @@
                                                         foreach($links as $link){
                                                             if ($i == 0){
                                                                 ?>
-                                                                    <button type="button" data-bs-target="#carrusel<?php echo $actividad['eCodeActividades'];?>" data-bs-slide-to="<?php echo $i;?>" class="active" aria-current="true" aria-label="Slide <?php echo $i;?>"></button>
+                                                                    <button type="button" data-bs-target="#carrusel<?php echo $actividad['eCodeActividades'];?>" data-bs-slide-to="<?php echo $i;?>" class="active" aria-current="true" aria-label="Slide <?php echo $i;?>" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>"></button>
                                                                 <?php
                                                             }else{
                                                                 ?>
-                                                                    <button type="button" data-bs-target="#carrusel<?php echo $actividad['eCodeActividades'];?>" data-bs-slide-to="<?php echo $i;?>" aria-label="Slide <?php echo $i;?>"></button>
+                                                                    <button type="button" data-bs-target="#carrusel<?php echo $actividad['eCodeActividades'];?>" data-bs-slide-to="<?php echo $i;?>" aria-label="Slide <?php echo $i;?>" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>"></button>
                                                                 <?php
                                                             }
                                                             $i++;
@@ -84,21 +85,21 @@
 
                                                     ?>
                                                 </div>
-                                                <div class="carousel-inner">
+                                                <div class="carousel-inner" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>">
                                                     <?php
 
                                                         $i = 0;
                                                         foreach($links as $link){
                                                             if ($i == 0){
                                                                 ?>
-                                                                    <div class="carousel-item active">
-                                                                        <img src="<?php echo $link;?>" class="d-block w-100">
+                                                                    <div class="carousel-item active" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>">
+                                                                        <img src="<?php echo $link;?>" class="d-block w-100" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>">
                                                                     </div>
                                                                 <?php
                                                             }else{
                                                                 ?>
-                                                                    <div class="carousel-item">
-                                                                        <img src="<?php echo $link;?>" class="d-block w-100">
+                                                                    <div class="carousel-item" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>">
+                                                                        <img src="<?php echo $link;?>" class="d-block w-100" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>">
                                                                     </div>
                                                                 <?php
                                                             }
@@ -106,13 +107,13 @@
                                                         }
                                                     ?>
                                                 </div>
-                                                <button class="carousel-control-prev" type="button" data-bs-target="#carrusel<?php echo $actividad['eCodeActividades'];?>" data-bs-slide="prev">
-                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                    <span class="visually-hidden">Previous</span>
+                                                <button class="carousel-control-prev" type="button" data-bs-target="#carrusel<?php echo $actividad['eCodeActividades'];?>" data-bs-slide="prev" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>"></span>
+                                                    <span class="visually-hidden" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>">Previous</span>
                                                 </button>
-                                                <button class="carousel-control-next" type="button" data-bs-target="#carrusel<?php echo $actividad['eCodeActividades'];?>" data-bs-slide="next">
-                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                    <span class="visually-hidden">Next</span>
+                                                <button class="carousel-control-next" type="button" data-bs-target="#carrusel<?php echo $actividad['eCodeActividades'];?>" data-bs-slide="next" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>"></span>
+                                                    <span class="visually-hidden" data-accion="actividad_activa" data-actividad="<?php echo $actividad['eCodeActividades'] ;?>">Next</span>
                                                 </button>
                                                 </div>
                                             </div>
@@ -131,6 +132,11 @@
             </div>
 
         </main>
+        
+        <div id="menuDesplegable" class="menu">
+            <ul>
+            </ul>
+        </div>
         <div class="modal fade" id="agregarActividad" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -168,57 +174,3 @@
 
 </body>
 </html>
-
-
-<!-- 
-<div class="container-actividad">
-                        <div class="card">
-                            <div class="card-body">
-                                <h2 class="card-title">Día Mundial del Medio Ambiente</h2>
-                                <p class="card-text">
-                                <small class="text-body-secondary">Eduardo Arcega <br> [Eliminado por Eduarod Arcega]</small><br>
-                                <small class="text-body-secondary">17/06/2023 - Eliminado[20/06/2024]</small>
-                                </p>
-                            </div>
-                            <div class="card-img-bottom">
-                                <div id="carrusel1" class="carousel slide">
-                                <div class="carousel-indicators">
-                                    <button type="button" data-bs-target="#carrusel1" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                                    <button type="button" data-bs-target="#carrusel1" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                                    <button type="button" data-bs-target="#carrusel1" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                                    <button type="button" data-bs-target="#carrusel1" data-bs-slide-to="3" aria-label="Slide 4"></button>
-                                    <button type="button" data-bs-target="#carrusel1" data-bs-slide-to="4" aria-label="Slide 5"></button>
-                                    <button type="button" data-bs-target="#carrusel1" data-bs-slide-to="5" aria-label="Slide 6"></button>
-                                </div>
-                                <div class="carousel-inner">
-                                    <div class="carousel-item active">
-                                        <img src="../img/fondo1.jpg" class="d-block w-100">
-                                    </div>
-                                    <div class="carousel-item">
-                                        <img src="../img/fondo1.jpg" class="d-block w-100">
-                                    </div>
-                                    <div class="carousel-item">
-                                        <img src="../img/fondo1.jpg" class="d-block w-100">
-                                    </div>
-                                    <div class="carousel-item">
-                                        <img src="../img/fondo1.jpg" class="d-block w-100">
-                                    </div>
-                                    <div class="carousel-item">
-                                        <img src="../img/fondo1.jpg" class="d-block w-100">
-                                    </div>
-                                    <div class="carousel-item">
-                                    <img src="../img/fondo1.jpg" class="d-block w-100">
-                                    </div>
-                                </div>
-                                <button class="carousel-control-prev" type="button" data-bs-target="#carrusel1" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
-                                </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#carrusel1" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
-                                </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
