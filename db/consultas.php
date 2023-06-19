@@ -75,4 +75,15 @@
 
         return $carpeta . $nuevoNombre;
     }
+    
+    function encontrarEnlacesYouTube($texto) {
+        $regex = '/(https?:\/\/(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/|v\/)?[\w-]+|https?:\/\/youtu\.be\/[\w-]+)/i';
+        preg_match_all($regex, $texto, $matches);
+
+        if (!empty($matches[0])) {
+            return $matches[0];
+        } else {
+            return [];
+        }
+    }
 ?>
