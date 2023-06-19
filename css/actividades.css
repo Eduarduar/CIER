@@ -20,7 +20,7 @@
     max-width: 90%;
     width: 100%;
     padding: 1rem;
-    margin: 0 auto;
+    margin: 0 auto
 }
 
 .container-actividad {
@@ -93,7 +93,6 @@
         max-width: 49%;
         width: 100%;
     }
-    
 }
 
 @media only screen and (max-width: 991px) {
@@ -108,5 +107,4 @@
         max-width: 99%;
         width: 100%;
     }
-    
 }
