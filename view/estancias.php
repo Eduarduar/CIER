@@ -40,26 +40,35 @@
 
             <?php
             
-                // $estancias = $consulta->consultar("SELECT e.eCodeEstancias, e.tTextoEstancias, e.tYoutubeEstancias, e.tImgsEstancias, e.fCreateEstancias, e.fUpdateEstancias, usuariosCreador.tNombreUsuarios AS tNombreCreador, usuariosActualizador.tNombreUsuarios AS tNombreActualizador, e.bEstadoEstancias
-                // FROM estancias e
-                // INNER JOIN usuarios AS usuariosCreador ON e.eCreateEstancias = usuariosCreador.eCodeUsuarios
-                // LEFT JOIN usuarios AS usuariosActualizador ON e.eUpdateEstancias = usuariosActualizador.eCodeUsuarios
-                // WHERE e.bEstadoEstancias = 1;");
+                $estancias = $consulta->consultar("SELECT est.eCodeEstancias, est.tNombreEstancias, est.tProvenienciaEstancias, est.tProyectoEstancias, est.fFechaEstancias, est.tInstalacionesEstancias, te.tNombreTipoEstancia AS tTipoEstancia, est.tLinksEstancias, est.tImgsEstancias, est.fCreateEstancias, est.fUpdateEstancias, uc.tNombreUsuarios AS tCreateUsuario, uu.tNombreUsuarios AS tUpdateUsuario, est.bEstadoEstancias
+                FROM estancias est
+                LEFT JOIN tipoestancia te ON est.eTipoEstancias = te.eCodeTipoEstancia
+                LEFT JOIN usuarios uc ON est.eCreateEstancias = uc.eCodeUsuarios
+                LEFT JOIN usuarios uu ON est.eUpdateEstancias = uu.eCodeUsuarios
+                WHERE est.bEstadoEstancias = 1
+                ORDER BY est.eCodeEstancias DESC;");
 
-                // if ($estancias->rowCount()){
-                    if (false) {
+                if ($estancias->rowCount()){
                     foreach($estancias as $estancia){
 
-                        $links = encontrarEnlacesYouTubeYFacebook($estancia['tYoutubeEstancias']);
+                        $links = encontrarEnlacesYouTubeYFacebook($estancia['tLinksEstancias']);
 
                         ?>
                             
                             <div class="card container-estancia contenido" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
                                 <div class="card-body" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
                                     <p class="card-text" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
-                                        <small class="text-body-secondary" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa"><?php echo $estancia['fCreateEstancias']; ?></small>
+                                        <small class="text-body-secondary" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa"><?php echo $estancia['fCreateEstancias']; ?> - <?php echo $estancia['tCreateUsuario']; ?></small>
                                     </p>
-                                    <p class="card-text" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa"><?php echo $estancia['tTextoEstancias']; ?></p>
+                                    <div class="card-text" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                        <span data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa"><?php echo $estancia['tNombreEstancias'];  if ($estancia['tProvenienciaEstancias'] != ''){echo ' - <strong>' . $estancia['tProvenienciaEstancias'] . '</strong>'; } ?></span>
+                                        <ul>
+                                            <li><strong>Fecha: </strong><?php echo $estancia['fFechaEstancias']; ?></li>
+                                            <li><strong>Proyecto: </strong><?php echo $estancia['tProyectoEstancias']; ?></li>
+                                            <li><strong>Instalaciones del <?php echo $estancia['tInstalacionesEstancias']; ?></strong></li>
+                                            <li><strong>Tipo: </strong><?php echo $estancia['tTipoEstancia']; ?></li>
+                                        </ul>
+                                    </div>
                                 </div>
                                 <?php
                                 
@@ -74,6 +83,14 @@
                                                     <?php
                                                         $index = 0;
                                                         foreach($links as $link){
+                                                            
+                                                            // if (verificarFacebook(obtenerEnlaceRedSocial($link)) == true){
+                                                            //     echo obtenerEnlaceRedSocial($link);
+                                                            // }else{
+                                                            //     echo obtenerEnlaceRedSocial($link);
+                                                            // }
+
+                                                            // echo obtenerURLEmbed($link);
 
                                                             if ($index == 0){
                                                                 if (verificarFacebook(obtenerEnlaceRedSocial($link)) == true){

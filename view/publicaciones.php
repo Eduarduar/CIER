@@ -135,7 +135,7 @@
 
                         
                         <label for="tipo_publicacion" class="form-label">Tipo de publicacion</label>
-                        <select class="form-select" id="tipo_publicacion" aria-label=".form-select-lg">
+                        <select class="form-select" id="tipo_publicacion" name="tipo_publicacion" aria-label=".form-select-lg">
                             <?php 
                             
                                 $tipos = $consulta->consultar("SELECT * FROM tipopublicaciones ORDER BY eCodeTipoPublicaciones");
