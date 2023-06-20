@@ -76,14 +76,76 @@
         return $carpeta . $nuevoNombre;
     }
     
-    function encontrarEnlacesYouTube($texto) {
-        $regex = '/(https?:\/\/(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/|v\/)?[\w-]+|https?:\/\/youtu\.be\/[\w-]+)/i';
+    function encontrarEnlacesYouTubeYFacebook($texto) {
+        $regex = '/(https?:\/\/(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/|v\/)?[\w-]+|https?:\/\/youtu\.be\/[\w-]+|https:\/\/www\.facebook\.com\/plugins\/video\.php\?height=\d+&href=https%3A%2F%2Fwww\.facebook\.com%2F[\w-]+%2Fvideos%2F\d+%2F&show_text=\w+&width=\d+&t=\d+)/i';
         preg_match_all($regex, $texto, $matches);
-
+      
         if (!empty($matches[0])) {
-            return $matches[0];
+          return $matches[0];
         } else {
-            return [];
+          return [];
+        }
+      }      
+
+    function obtenerURLEmbed($url) {
+        $videoId = '';
+        $playlistId = '';
+    
+        // Comprobar si el enlace está en el formato "https://www.youtube.com/watch?v=VIDEO_ID"
+        if (strpos($url, 'youtube.com/watch?v=') !== false) {
+            $params = parse_url($url, PHP_URL_QUERY);
+            parse_str($params, $query);
+            $videoId = $query['v'];
+        }
+        // Comprobar si el enlace está en el formato "https://youtu.be/VIDEO_ID"
+        elseif (strpos($url, 'youtu.be/') !== false) {
+            $videoId = explode('youtu.be/', $url)[1];
+        }
+        // Comprobar si el enlace está en el formato "https://www.youtube.com/v/VIDEO_ID"
+        elseif (strpos($url, 'youtube.com/v/') !== false) {
+            $videoId = explode('youtube.com/v/', $url)[1];
+        }
+        // Comprobar si el enlace está en el formato "https://www.youtube.com/embed/VIDEO_ID?list=PLAYLIST_ID"
+        elseif (strpos($url, 'youtube.com/embed/') !== false && strpos($url, '?list=') !== false) {
+            $urlParts = explode('?', $url);
+            $videoId = explode('youtube.com/embed/', $urlParts[0])[1];
+            $params = parse_url($url, PHP_URL_QUERY);
+            parse_str($params, $query);
+            $playlistId = $query['list'];
+        }
+        // Comprobar si el enlace está en el formato "https://www.youtube.com/embed/videoseries?list=PLAYLIST_ID"
+        elseif (strpos($url, 'youtube.com/embed/videoseries?list=') !== false) {
+            $playlistId = explode('youtube.com/embed/videoseries?list=', $url)[1];
+        }
+    
+        // Comprobar si se obtuvo el ID del video
+        if ($videoId) {
+            return "https://www.youtube.com/embed/{$videoId}" . ($playlistId ? "?list={$playlistId}" : '');
+        } else {
+            // Si el enlace no coincide con ninguno de los formatos esperados, retorna null o un valor predeterminado según tus necesidades
+            return null;
         }
     }
+
+    function obtenerEnlaceRedSocial($enlace) {
+        $regexYouTube = '/(https?:\/\/(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/|v\/)?[\w-]+|https?:\/\/youtu\.be\/[\w-]+)/i';
+        
+        if (preg_match($regexYouTube, $enlace)) {
+          return obtenerURLEmbed($enlace);
+        } else {
+          return $enlace;
+        }
+    }
+
+    function verificarFacebook($enlace) {
+        $regexYouTube = '/(https?:\/\/(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/|v\/)?[\w-]+|https?:\/\/youtu\.be\/[\w-]+)/i';
+        
+        if (preg_match($regexYouTube, $enlace)) {
+          return false;
+        } else {
+          return true;
+        }
+    }
+      
+    
 ?>

@@ -29,83 +29,155 @@
     <main>
 
         <div class="container-center">
+
+            <div class="container-buttons">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarEstancia">Agregar Estancia</button>
+                <button class="btn btn-outline-danger">Estancias Eliminadas</button>
+                <button class="btn btn-outline-success" style="display:none">Estancias</button>
+            </div>
+
             <div class="container-estancias">
 
             <?php
             
-                $estancias = $consulta->consultar("SELECT e.eCodeEstancias, e.tTextoEstancias, e.tYoutubeEstancias, e.tImgsEstancias, e.fCreateEstancias, e.fUpdateEstancias, usuariosCreador.tNombreUsuarios AS tNombreCreador, usuariosActualizador.tNombreUsuarios AS tNombreActualizador, e.bEstadoEstancias
-                FROM estancias e
-                INNER JOIN usuarios AS usuariosCreador ON e.eCreateEstancias = usuariosCreador.eCodeUsuarios
-                LEFT JOIN usuarios AS usuariosActualizador ON e.eUpdateEstancias = usuariosActualizador.eCodeUsuarios
-                WHERE e.bEstadoEstancias = 1;");
+                // $estancias = $consulta->consultar("SELECT e.eCodeEstancias, e.tTextoEstancias, e.tYoutubeEstancias, e.tImgsEstancias, e.fCreateEstancias, e.fUpdateEstancias, usuariosCreador.tNombreUsuarios AS tNombreCreador, usuariosActualizador.tNombreUsuarios AS tNombreActualizador, e.bEstadoEstancias
+                // FROM estancias e
+                // INNER JOIN usuarios AS usuariosCreador ON e.eCreateEstancias = usuariosCreador.eCodeUsuarios
+                // LEFT JOIN usuarios AS usuariosActualizador ON e.eUpdateEstancias = usuariosActualizador.eCodeUsuarios
+                // WHERE e.bEstadoEstancias = 1;");
 
-                if ($estancias->rowCount()){
-                    $carrusel = 1;
+                // if ($estancias->rowCount()){
+                    if (false) {
                     foreach($estancias as $estancia){
 
-                        $links = encontrarEnlacesYouTube($estancia['tYoutubeEstancias']);
+                        $links = encontrarEnlacesYouTubeYFacebook($estancia['tYoutubeEstancias']);
 
                         ?>
                             
-                            <div class="card container-estancia">
-                                <div class="card-body">
-                                    <p class="card-text"><small class="text-body-secondary"><?php echo $estancia['fCreateEstancias']; ?></small></p>
-                                    <p class="card-text"><?php echo $estancia['tTextoEstancias']; ?></p>
+                            <div class="card container-estancia contenido" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                <div class="card-body" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                    <p class="card-text" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                        <small class="text-body-secondary" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa"><?php echo $estancia['fCreateEstancias']; ?></small>
+                                    </p>
+                                    <p class="card-text" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa"><?php echo $estancia['tTextoEstancias']; ?></p>
                                 </div>
                                 <?php
                                 
-                                    if (!empty($links)){ // seguir con el formato de los videos ------------------------------
+                                    if (!empty($links)){ 
 
                                         ?>
                                         
-                                            <div class="card-img-bottom">
-                                                <div id="carrusel<?php echo $carrusel; ?>" class="carousel slide videos">
-                                                    <div class="carousel-inner">
+                                            <div class="card-img-bottom" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                                <div id="carrusel<?php echo $estancia['eCodeEstancias']; ?>" class="carousel slide videos" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                                    <div class="carousel-inner" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
 
-                                                        <div class="carousel-item active">
-                                                            <iframe id="player" type="text/html" width="640" height="360" src="[link]" frameborder="0"></iframe>
-                                                        </div>
+                                                    <?php
+                                                        $index = 0;
+                                                        foreach($links as $link){
+
+                                                            if ($index == 0){
+                                                                if (verificarFacebook(obtenerEnlaceRedSocial($link)) == true){
+                                                                    ?>
+                                                                        <div class="carousel-item active" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                                                            <div class="container-facebook">
+                                                                                <iframe class="facebook" type="text/html" src="<?php echo obtenerEnlaceRedSocial($link); ?>" frameborder="0" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa" allowfullscreen></iframe>
+                                                                            </div>
+                                                                        </div>
+                                                                    <?php
+                                                                }else{
+                                                                    ?>
+                                                                        <div class="carousel-item active" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                                                            <iframe type="text/html" src="<?php echo obtenerEnlaceRedSocial($link); ?>" frameborder="0" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa" allowfullscreen></iframe>
+                                                                        </div>
+                                                                    <?php
+                                                                }
+                                                            }else{
+                                                                if (verificarFacebook(obtenerEnlaceRedSocial($link)) == true){
+                                                                    ?>
+                                                                        <div class="carousel-item" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                                                            <div class="container-facebook">
+                                                                                <iframe class="facebook" type="text/html" src="<?php echo obtenerEnlaceRedSocial($link); ?>" frameborder="0" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa" allowfullscreen></iframe>
+                                                                            </div>
+                                                                        </div>
+                                                                    <?php
+                                                                }else{
+                                                                    ?>
+                                                                        <div class="carousel-item" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                                                            <iframe type="text/html" src="<?php echo obtenerEnlaceRedSocial($link); ?>" frameborder="0" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa" allowfullscreen></iframe>
+                                                                        </div>
+                                                                    <?php
+                                                                }
+                                                            }
+
+                                                            $index++;
+                                                        }
+                                                        $index = 0
+                                                    
+                                                    ?>
+
                                                     </div>
-                                                    <button class="carousel-control-prev" type="button" data-bs-target="#carrusel[carruselVideos]" data-bs-slide="prev">
-                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                        <span class="visually-hidden">Previous</span>
+                                                    <button class="carousel-control-prev" type="button" data-bs-target="#carrusel<?php echo $estancia['eCodeEstancias']; ?>" data-bs-slide="prev" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                                        <span class="carousel-control-prev-icon" aria-hidden="true" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa"></span>
+                                                        <span class="visually-hidden" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">Previous</span>
                                                     </button>
-                                                    <button class="carousel-control-next" type="button" data-bs-target="#carrusel[carruselVideos]" data-bs-slide="next">
-                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                        <span class="visually-hidden">Next</span>
+                                                    <button class="carousel-control-next" type="button" data-bs-target="#carrusel<?php echo $estancia['eCodeEstancias']; ?>" data-bs-slide="next" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                                        <span class="carousel-control-next-icon" aria-hidden="true" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa"></span>
+                                                        <span class="visually-hidden" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">Next</span>
                                                     </button>
                                                 </div>
                                             </div>
                                 
                                         <?php
 
-                                    }
+                                    }                                   
                                 
                                 ?>
                     
-                                <div class="card-img-bottom">
-                                    <div id="carrusel[carruselImagenes]" class="carousel slide">
-                                        <div class="carousel-inner">
-                                            <div class="carousel-item active">
-                                            <img src="..." class="d-block w-100">
-                                            </div>
+                                <div class="card-img-bottom" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                    <div id="carrusel<?php echo $estancia['eCodeEstancias'] . '1'; ?>" class="carousel slide" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                        <div class="carousel-inner" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+
+                                        <?php
+
+                                            $imgs = explode(",", $estancia['tImgsEstancias']);
+
+                                            foreach($imgs as $img){
+
+                                                if($index == 0){
+                                                    ?>
+                                                    
+                                                        <div class="carousel-item active" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                                            <img src="<?php echo $img; ?>" class="d-block w-100" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                                        </div>
+                                                    
+                                                    <?php
+                                                }else{
+                                                    ?>
+                                                    
+                                                        <div class="carousel-item" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                                            <img src="<?php echo $img; ?>" class="d-block w-100" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                                        </div>
+                                                    
+                                                    <?php
+                                                }
+                                                $index++;
+                                            }
+                                        
+                                        ?>
                                         </div>
-                                        <button class="carousel-control-prev" type="button" data-bs-target="#carrusel[carruselImagenes]" data-bs-slide="prev">
-                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Previous</span>
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#carrusel<?php echo $estancia['eCodeEstancias'] . '1'; ?>" data-bs-slide="prev" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa"></span>
+                                            <span class="visually-hidden" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">Previous</span>
                                         </button>
-                                        <button class="carousel-control-next" type="button" data-bs-target="#carrusel[carruselImagenes]" data-bs-slide="next">
-                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Next</span>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#carrusel<?php echo $estancia['eCodeEstancias'] . '1'; ?>" data-bs-slide="next" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                            <span class="carousel-control-next-icon" aria-hidden="true" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa"></span>
+                                            <span class="visually-hidden" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">Next</span>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             
                         <?php
-
-                        $carrusel++;
-
                     }
                 }
 
@@ -114,9 +186,73 @@
 
             </div>        
         </div>
-
-
     </main>
+        
+        <div id="menuDesplegable" class="menu">
+            <ul>
+            </ul>
+        </div>
+        <div class="modal fade" id="agregarEstancia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Estancia</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre*</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" >
+                            <div class="invalid-feedback">El nombre no es valido</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="proveniencia" class="form-label">Lugar de proveniencia</label>
+                            <input type="text" class="form-control" id="proveniencia" name="proveniencia">
+                            <div class="invalid-feedback">El texto no es valido</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha" class="form-label">Fecha*</label>
+                            <input type="date" class="form-control" id="fecha" name="fecha">
+                        </div>
+                        <div class="mb-3">
+                            <label for="proyecto" class="form-label">Proyecto*</label>
+                            <input type="text" class="form-control" id="proyecto" name="proyecto">
+                            <div class="invalid-feedback">El nombre del proyecto no es valido</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="instalaciones" class="form-label">Instalaciones*</label>
+                            <input type="text" class="form-control" id="instalaciones" name="instalaciones">
+                            <div class="invalid-feedback">El nombre no es valido</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipo" class="form-label">Tipo de Estancia*</label>
+                            <select class="form-select" id="tipo" aria-label=".form-select-lg">
+                                <?php 
+                                    $tipos = $consulta->consultar("SELECT * FROM tipoestancia ORDER BY eCodeTipoEstancia");
+                                    foreach($tipos as $tipo){
+                                        echo '<option value="'. $tipo['eCodeTipoEstancia'] .'">'. $tipo['tNombreTipoEstancia'] .'</option>';
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="links" class="form-label">links de videos (youtube o facebook)</label>
+                            <input type="text" class="form-control" id="links" name="links">
+                        </div>
+                        <div class="container-media">
+
+                            <p class="text-file" id="text-file" ><span class="material-symbols-outlined">photo_library</span>
+                            <input type="file" class="media form-control" name="imgs[]" id="media" accept="image/*" multiple></p>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" id="btn-publicar" class="btn btn-primary" disabled>Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <script>
         const id_user = <?php echo $_SESSION['eCodeUsuario']; ?>;
@@ -130,83 +266,3 @@
     
 </body>
 </html>
-
-<!-- https://www.youtube.com/embed/Qr4FPQxPx54 -->
-<!-- https://youtu.be/Qr4FPQxPx54 -->
-<!-- https://www.youtube.com/watch?v=Qr4FPQxPx54&list=RDQr4FPQxPx54&start_radio=1 -->
-
-
-            <!--
-                <div class="card container-estancia">
-                    <div class="card-body">
-                        <p class="card-text"><small class="text-body-secondary">[fecha]</small></p>
-                        <p class="card-text">[texto]</p>
-                    </div>
-                    <div class="card-img-bottom">
-                        <div id="carrusel[carrusel]" class="carousel slide videos">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <iframe id="player" type="text/html" width="640" height="360" src="[link]" frameborder="0"></iframe>
-                                </div>
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carrusel[carrusel]" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carrusel[carrusel]" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-img-bottom">
-                        <div id="carrusel[carrusel]" class="carousel slide">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="..." class="d-block w-100">
-                                </div>
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carrusel[carrusel]" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carrusel[carrusel]" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
-                        </div>
-                    </div>
-                </div> 
-            -->
-
-            <!-- <div class="card container-estancia">
-                <div class="card-body">
-                    <p class="card-text"><small class="text-body-secondary">[fecha]</small></p>
-                    <p class="card-text">[texto]</p>
-
-                    <div class="containerLinks">
-                        <div class="container-link">
-
-                            <iframe id="player" type="text/html" width="640" height="360" src="[link]" frameborder="0"></iframe>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="card-img-bottom">
-                    <div id="carrusel[carrusel]" class="carousel slide">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="..." class="d-block w-100">
-                            </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carrusel[carrusel]" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carrusel[carrusel]" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
-                    </div>
-                </div>
-            </div> -->

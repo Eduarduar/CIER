@@ -3,64 +3,99 @@ document.querySelector('a[href="./estancias"]').classList.add('active');
 
 // referencias DOM
 const contenedorEstancias = document.querySelector('.container-estancias');
+const inputs = document.querySelectorAll('input');
+const buttonAgregar = document.querySelector('#agregarEstancia .modal-footer button.btn.btn-primary');
+const inputNombre = document.querySelector('input#nombre');
+const inputProveniencia = document.querySelector('input#proveniencia');
+const inputFecha = document.querySelector('input#fecha');
+const inputProyecto = document.querySelector('input#proyecto');
+const inputInstalaciones = document.querySelector('input#instalaciones');
+const inputLinks = document.querySelector('input#links');
+const inputMedia = document.querySelector('input#media');
 
 // encuentra todos los links de youtube en un texto
-const encontrarEnlacesYouTube = function (texto) {
-    const regex = /(https?:\/\/(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/|v\/)?[\w-]+|https?:\/\/youtu\.be\/[\w-]+)/gi;
-    const matches = texto.match(regex);
-  
-    if (matches) {
-      return matches;
-    } else {
-      return [];
-    }
+const encontrarEnlacesYouTubeYFacebook = function (texto) {
+  const regex = /(https?:\/\/(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/|v\/)?[\w-]+|https?:\/\/youtu\.be\/[\w-]+|https:\/\/www\.facebook\.com\/plugins\/video\.php\?height=\d+&href=https%3A%2F%2Fwww\.facebook\.com%2F[\w-]+%2Fvideos%2F\d+%2F&show_text=\w+&width=\d+&t=\d+)/gi;
+  const matches = texto.match(regex);
+
+  if (matches) {
+    return matches;
+  } else {
+    return [];
+  }
 }
 
-const eliminarEnlacesYouTube = function (texto) {
-    const regex = /(https?:\/\/(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/|v\/)?[\w-]+|https?:\/\/youtu\.be\/[\w-]+)/gi;
-    const textoSinEnlaces = texto.replace(regex, '').trim();
-    return textoSinEnlaces;
-};  
+const eliminarEnlaces = function (texto) {
+  const regex = /(https?:\/\/(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/|v\/)?[\w-]+|https?:\/\/youtu\.be\/[\w-]+|https:\/\/www\.facebook\.com\/plugins\/video\.php\?height=\d+&href=https%3A%2F%2Fwww\.facebook\.com%2F[\w-]+%2Fvideos%2F\d+%2F&show_text=\w+&width=\d+&t=\d+)/gi;
+  const textoSinEnlaces = texto.replace(regex, '');
 
-// cambia el formato del link de youtube a uno que acepta el iframe
+  return textoSinEnlaces;
+}
+
+const obtenerEnlaceRedSocial = function (enlace) {
+  const regexYouTube = /(https?:\/\/(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/|v\/)?[\w-]+|https?:\/\/youtu\.be\/[\w-]+)/i;
+  
+  if (regexYouTube.test(enlace)) {
+    return obtenerURLEmbed(enlace);
+  } else {
+    return enlace;
+  }
+}
+
+const verificarFacebook = function (enlace) {
+  const regexYouTube = /(https?:\/\/(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/|v\/)?[\w-]+|https?:\/\/youtu\.be\/[\w-]+)/i;
+  
+  if (regexYouTube.test(enlace)) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 function obtenerURLEmbed(url) {
-    let videoId = '';
-    let playlistId = '';
-  
-    // Comprobar si el enlace está en el formato "https://www.youtube.com/watch?v=VIDEO_ID"
-    if (url.includes('youtube.com/watch?v=')) {
-      const params = new URLSearchParams(new URL(url).search);
-      videoId = params.get('v');
-    }
-    // Comprobar si el enlace está en el formato "https://youtu.be/VIDEO_ID"
-    else if (url.includes('youtu.be/')) {
-      videoId = url.split('youtu.be/')[1];
-    }
-    // Comprobar si el enlace está en el formato "https://www.youtube.com/v/VIDEO_ID"
-    else if (url.includes('youtube.com/v/')) {
-      videoId = url.split('youtube.com/v/')[1];
-    }
-    // Comprobar si el enlace está en el formato "https://www.youtube.com/embed/VIDEO_ID?list=PLAYLIST_ID"
-    else if (url.includes('youtube.com/embed/') && url.includes('?list=')) {
-      const urlParts = url.split('?');
-      videoId = urlParts[0].split('youtube.com/embed/')[1];
-      const params = new URLSearchParams(urlParts[1]);
-      playlistId = params.get('list');
-    }
-    // Comprobar si el enlace está en el formato "https://www.youtube.com/embed/videoseries?list=PLAYLIST_ID"
-    else if (url.includes('youtube.com/embed/videoseries?list=')) {
-      playlistId = url.split('youtube.com/embed/videoseries?list=')[1];
-    }
-  
-    // Comprobar si se obtuvo el ID del video
-    if (videoId) {
-      return `https://www.youtube.com/embed/${videoId}${playlistId ? `?list=${playlistId}` : ''}`;
-    } else {
-      // Si el enlace no coincide con ninguno de los formatos esperados, retorna null o un valor predeterminado según tus necesidades
-      return null;
-    }
+  let videoId = '';
+  let playlistId = '';
+
+  // Comprobar si el enlace está en el formato "https://www.youtube.com/watch?v=VIDEO_ID"
+  if (url.includes('youtube.com/watch?v=')) {
+    const params = new URLSearchParams(new URL(url).search);
+    videoId = params.get('v');
+  }
+  // Comprobar si el enlace está en el formato "https://youtu.be/VIDEO_ID"
+  else if (url.includes('youtu.be/')) {
+    videoId = url.split('youtu.be/')[1];
+  }
+  // Comprobar si el enlace está en el formato "https://www.youtube.com/v/VIDEO_ID"
+  else if (url.includes('youtube.com/v/')) {
+    videoId = url.split('youtube.com/v/')[1];
+  }
+  // Comprobar si el enlace está en el formato "https://www.youtube.com/embed/VIDEO_ID?list=PLAYLIST_ID"
+  else if (url.includes('youtube.com/embed/') && url.includes('?list=')) {
+    const urlParts = url.split('?');
+    videoId = urlParts[0].split('youtube.com/embed/')[1];
+    const params = new URLSearchParams(urlParts[1]);
+    playlistId = params.get('list');
+  }
+  // Comprobar si el enlace está en el formato "https://www.youtube.com/embed/videoseries?list=PLAYLIST_ID"
+  else if (url.includes('youtube.com/embed/videoseries?list=')) {
+    playlistId = url.split('youtube.com/embed/videoseries?list=')[1];
+  }
+  // Comprobar si el enlace está en el formato "https://www.youtube.com/embed/VIDEO_ID"
+  else if (url.includes('youtube.com/embed/')) {
+    videoId = url.split('youtube.com/embed/')[1];
+  }
+
+  // Comprobar si se obtuvo el ID del video
+  if (videoId) {
+    return `https://www.youtube.com/embed/${videoId}${playlistId ? `?list=${playlistId}` : ''}`;
+  } else {
+    // Si el enlace no coincide con ninguno de los formatos esperados, retorna null o un valor predeterminado según tus necesidades
+    return null;
+  }
 }
-const crearEstancia = function(texto, links, textFecha, carruselVideos, imagenes, carruselImagenes) {
+
+
+const crearEstancia = function(nombre, proveniencia, proyecto, Instalaciones, links, fechaProyecto, carruselVideos, imagenes, carruselImagenes, fechaCreate, FechaUPdate, usuarioC, usuarioA) {
     // Crear el elemento contenedor principal
     const containerEstancia = document.createElement('div');
     containerEstancia.classList.add('card', 'container-estancia');
@@ -70,10 +105,10 @@ const crearEstancia = function(texto, links, textFecha, carruselVideos, imagenes
     cardBody.classList.add('card-body');
   
     // Agregar el elemento de texto al cuerpo de la tarjeta
-    const fecha = document.createElement('p');
-    fecha.classList.add('card-text');
-    fecha.innerHTML = '<small class="text-body-secondary">'+ textFecha +'</small>';
-    cardBody.appendChild(fecha);
+    // const fecha = document.createElement('p');
+    // fecha.classList.add('card-text');
+    // fecha.innerHTML = '<small class="text-body-secondary">'+ textFecha +'</small>';
+    // cardBody.appendChild(fecha);
   
     const textoElement = document.createElement('p');
     textoElement.classList.add('card-text');
@@ -104,15 +139,23 @@ const crearEstancia = function(texto, links, textFecha, carruselVideos, imagenes
             if (index === 0) {
                 carouselItem.classList.add('active');
             }
-        
+
+            
             const iframe = document.createElement('iframe');
             iframe.setAttribute('type', 'text/html');
-            iframe.setAttribute('src',`${obtenerURLEmbed(link)}`);
+            iframe.setAttribute('src',`${obtenerEnlaceRedSocial(link)}`);
             iframe.setAttribute('frameBorder', '0');
             iframe.setAttribute('allowfullscreen','true');
-        
-            carouselItem.appendChild(iframe);
-            carruselVideosInner.appendChild(carouselItem);
+            
+            if (verificarFacebook(obtenerEnlaceRedSocial(link))){
+              const containerFacebook = document.createElement('div');
+              containerFacebook.classList.add('container-facebook');
+              containerFacebook.appendChild(iframe);
+              carouselItem.appendChild(containerFacebook);
+            }else{
+              carouselItem.appendChild(iframe);
+              carruselVideosInner.appendChild(carouselItem);
+            }
         });
         // Crear los botones de control del carrusel de vídeos
         const prevButtonVideos = document.createElement('button');
@@ -252,3 +295,72 @@ const crearEstancia = function(texto, links, textFecha, carruselVideos, imagenes
 
 // let fecha = '20/06/2023'
 // contenedorEstancias.appendChild(crearEstancia(texto, links, fecha, carruselVideos, imagenes, carruselImagenes));
+
+const Estancia = {
+  nombre: false, 
+  lugar: false,
+  fecha: false,
+  proyecto: false,
+  instalacion: false,
+  links: false
+};
+
+const validarEstancia = function (){
+  if (Estancia.nombre && Estancia.lugar && Estancia.fecha && Estancia.proyecto && Estancia.instalacion && Estancia.links){
+    Estancia.nombre = validarCampo(expresiones.usuario, inputNombre.value, inputNombre.id);
+    Estancia.lugar = validarCampo(expresiones.usuario, inputProveniencia.value, inputProveniencia.id);
+    Estancia.fecha = validarCampo(expresiones.fecha, inputFecha.value, inputFecha.id);
+    Estancia.proyecto = validarCampo(expresiones.usuario, inputProyecto.value, inputProyecto.id);
+    Estancia.instalacion = validarCampo(expresiones.usuario, inputInstalaciones.value, inputInstalaciones.id);
+    Estancia.links = validarCampo(expresiones.links, inputLinks.value, inputLinks.id);
+    if (Estancia.nombre && Estancia.lugar && Estancia.fecha && Estancia.proyecto && Estancia.instalacion && Estancia.links){
+      buttonAgregar.removeAttribute('disabled');
+      return true;
+    }else{
+      buttonAgregar.setAttribute('disabled', 'true');
+      return false;
+    }
+  }
+  buttonAgregar.setAttribute('disabled', 'true');
+  return false;
+}
+
+
+const validarForm = (e) => {
+  switch(e.target.name) {
+    case 'nombre':
+      Estancia.nombre = validarCampo(expresiones.usuario, e.target.value, e.target.id);
+      break;
+
+    case 'proveniencia':
+      Estancia.lugar = validarCampo(expresiones.usuario, e.target.value, e.target.id);
+      break;
+
+    case 'fecha':
+      Estancia.fecha = validarCampo(expresiones.fecha, e.target.value, e.target.id);
+      break;
+
+    case 'proyecto':
+      Estancia.proyecto = validarCampo(expresiones.usuario, e.target.value, e.target.id);
+      break;
+
+    case 'instalaciones':
+      Estancia.instalacion = validarCampo(expresiones.usuario, e.target.value, e.target.id);
+      break;
+
+    case 'links':
+      Estancia.links = validarCampo(expresiones.links, e.target.value, e.target.id);
+      break;
+  }
+  
+  validarEstancia();
+};
+
+inputs.forEach((input)=>{
+  // input.addEventListener('change', validarForm);
+  // input.addEventListener('keypress', validarForm);
+  // input.addEventListener('keyup', validarForm);
+  input.addEventListener('input', validarForm);
+});
+
+Estancia.links = validarCampo(expresiones.links, inputLinks.value, inputLinks.id);
