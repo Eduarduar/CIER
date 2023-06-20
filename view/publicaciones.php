@@ -138,9 +138,9 @@
                         <select class="form-select" id="tipo_publicacion" aria-label=".form-select-lg">
                             <?php 
                             
-                                $roles = $consulta->consultar("SELECT * FROM tipopublicaciones ORDER BY eCodeTipoPublicaciones");
-                                foreach($roles as $rol){
-                                    echo '<option value="'. $rol['eCodeTipoPublicaciones'] .'">'. $rol['tNombreTipoPublicaciones'] .'</option>';
+                                $tipos = $consulta->consultar("SELECT * FROM tipopublicaciones ORDER BY eCodeTipoPublicaciones");
+                                foreach($tipos as $tipo){
+                                    echo '<option value="'. $tipo['eCodeTipoPublicaciones'] .'">'. $tipo['tNombreTipoPublicaciones'] .'</option>';
                                 }
                             ?>
                         </select>
