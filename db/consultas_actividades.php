@@ -118,9 +118,9 @@
                 }
                 if ($error == 'estado'){
                     if ($estado == 1){
-                        $message = 'La publicación que intentas activar, ya esta activa';
+                        $message = 'La actividad que intentas activar, ya esta activa';
                     }else{
-                        $message = 'La publicación que intentas deshabilitar, ya esta inactiva';
+                        $message = 'La actividad que intentas deshabilitar, ya esta inactiva';
                     }
                     $resp = array('code' => '1', 'message' => $message);
                 }else{
@@ -175,6 +175,4 @@
             echo json_encode($resp);
         }
     }
-
-
 ?>

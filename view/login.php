@@ -30,11 +30,11 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="../css/login.css">
-        <link rel="shortcut icon" href="../img/utem.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://bootswatch.com/5/lux/bootstrap.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <title>Iniciar de sesión</title>
+        <link rel="shortcut icon" href="../img/logocier.png" type="image/x-icon">
+        <link rel="stylesheet" href="https://bootswatch.com/5/lux/bootstrap.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <title>Iniciar de sesión</title>
     </head>
     <body>
 
@@ -50,7 +50,7 @@
 
                 <div class="login-card-logo">
 
-                    <img src="../img/utem_logo_blanco.png" alt="logo">
+                    <img src="../img/logocier.png" alt="logo">
                 
                 </div>
 
@@ -60,11 +60,11 @@
 
                     <?php
                     
-                        if ($error == true){
-                            ?> <h4 class="login-card-header-error-container"> Numero de control o contraseña incorrecta </h4><?php
+                        if ($error){
+                            ?> <p class="login-card-header-error-container"> Numero de control o contraseña incorrectos </p><?php
                         }
 
-                    ?>
+                        ?>
                     
 
                 </div>
@@ -74,7 +74,7 @@
                     <div class="form-item">
                         <span class="form-item-icon material-symbols-outlined">person</span>
                         <input type="number" class="no-arrows" name="control" id="control" placeholder="No. Control" required>
-                        <p class="text-invalid">numero incorrecto</p>
+                        <p class="text-invalid">Numero Invalido</p>
                     </div>
 
                     <div class="form-item">
@@ -101,6 +101,25 @@
         <script src="../js/Evitar_reemvio.js"></script>
         <script src="../js/validacion.js"></script>
         <script src="../js/validacion-login.js"></script>
+        <?php 
+        
+            if ($error){
+                ?>
+
+                    <script>
+
+                        setTimeout(() => {
+                            let error = document.querySelector('.login-card-header-error-container');
+                            let padre = error.parentNode;
+                            padre.removeChild(error);
+                        }, 3000);
+
+                    </script>
+
+                <?php
+            }
+        
+        ?>
         
     </body>
 </html>

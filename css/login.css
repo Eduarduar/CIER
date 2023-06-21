@@ -19,7 +19,7 @@ body {
 
 .login-card-button-exit {
   position: absolute;
-  padding: 1rem;
+  padding: .5rem;
   z-index: 2;
 }
 
@@ -38,10 +38,10 @@ body {
 }
 
 .login-card {
-  max-width: 500px;
+  max-width: 400px;
   width: 100vw;
-  padding: 4rem;
-  background: #004d4da9;
+  padding: 2rem;
+  background: #303443dd;
   border-radius: 10px;
   position: relative;
   margin: 0 auto;
@@ -55,13 +55,13 @@ body {
 }
 
 .login-card-logo {
-  margin-bottom: 1.5rem;
+  margin-bottom: .5rem;
   user-select: none;
 }
 
 
 .login-card-logo img {
-  width: 100%;
+  width: 60%;
   user-select: none;
 }
 
@@ -87,9 +87,9 @@ body {
 }
 
 .login-card-header h1 {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: .6rem;
+  margin-bottom: .8rem;
   user-select: none;
   color: #e6e6e6;
 }
@@ -100,15 +100,18 @@ body {
 }
 
 .login-card-header-error-container{
-  background: rgb(255, 0, 0);
-  border-radius: 50px;
-  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  max-width: 100%;
+  word-wrap: break-word;
+  user-select: none;
+  color: #ff0000;
 }
 
 .login-card-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: .5rem;
 }
 
 .login-card-form .form-item {
@@ -136,13 +139,14 @@ body {
 .login-card input[type="number"] {
   border: none;
   outline: none;
-  background: #e6e6e6;
+  background: #b3b3b3;
   padding: 1rem 1.5rem;
   padding-left: calc(1rem *3.5);
   border-radius: 100px;
   width: 100%;
   transition: background .5s;
   color: #000;
+  margin-bottom: 38px;
 }
 
 .login-card input[type="text"]::placeholder,
@@ -153,16 +157,19 @@ body {
 }
 
 
-.login-card input.invalid {
-  background: rgb(224, 75, 100);
+.login-card input.invalid:focus, .login-card input.invalid {
+  background: #852430;
+  margin-bottom: 0;
+  color: #fff;
 }
 
-.login-card input.valid {
-  background: #007373;
+.login-card input.valid:focus, .login-card input.valid {
+  background: #37a70f;
+  color: #fff;
 }
 
 .login-card input:focus {
-  background: #00a6a6; 
+  background: #e6e6e6; 
 }
 
 .form-item input + .text-invalid {
@@ -173,28 +180,31 @@ body {
   display: block;
   margin: 0 auto;
   justify-content: center;
-  background: rgb(255, 0, 43);
   border-radius: 20px;
-  color: rgb(255, 255, 255) !important;
+  color: #ff3d00 !important;
   font-size: 1rem;
   padding: 0.3rem;
   text-align: center;
+  font-size: 14pt;
+  font-weight: 1000;
 }
 
 .login-card button {
-  background: #007373;
+  background: #777c82;
   color: #fff;
   padding: 1rem;
   border-radius: 100px;
   text-transform: uppercase;
   letter-spacing: 2px;
   border: none;
-  transition: background .5s;
+  transition: background .3s;
 }
 
 .login-card button:hover {
-  background: #004040;
+  background: #f9b512;
   cursor: pointer;
+  color: #000;
+  font-weight: 1000;
 }
 
 .no-arrows::-webkit-inner-spin-button,
@@ -205,4 +215,27 @@ body {
 
 .no-arrows {
   -moz-appearance: textfield;
+}
+
+@media only screen and (max-width: 600px) {
+
+  .login-card {
+    background: none !important;
+    margin: 0;
+    max-width: 300px;
+    width: 100%;
+    padding: 0;
+  }
+
+  body {
+    background: #282c38 !important;
+    min-height: 85vh;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .login-card-form {
+    gap: 1.5rem;
+  }
+
 }

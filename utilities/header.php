@@ -36,10 +36,10 @@
                     </ul>
                     <?php 
                         if ($_SESSION['tRolUsuario'] === 'administrador'){
-                            echo '<button class="btn btn-outline-success" id="btn_usuarios"><span class="fa fa-users" aria-hidden="true"></span></button>';
+                            echo '<button class="btn btn-outline-success" id="btn_usuarios"><i class="fa-solid fa-users fa-xl" style="color: #ffffff;"></i></button>';
                         }
                     ?>
-                    <button class="btn btn-outline-danger" id="btn_cerrarSesion" type="button">Cerrar sesión</button>
+                    <button class="btn btn-outline-danger" id="btn_cerrarSesion" type="button"><i class="fa-solid fa-right-from-bracket fa-xl" style="color: #fff;"></i></button>
                 </div>
             </div>
         </nav>

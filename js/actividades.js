@@ -340,7 +340,7 @@ const showActividadesActivas = (e) => {
             boton3.removeAttribute('disabled');
         } else {
             // La operación en el servidor no fue exitosa
-            alert(respuesta.menssaje);
+            alert(respuesta.message);
         }
         },
         error: function (error) {
@@ -376,7 +376,7 @@ const showActividadesEliminadas = function () {
             boton3.setAttribute('disabled','true');
           } else {
             // La operación en el servidor no fue exitosa
-            alert(respuesta.menssaje);
+            alert(respuesta.message);
           }
         },
         error: function (error) {

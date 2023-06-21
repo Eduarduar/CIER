@@ -14,6 +14,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" href="../img/logocier.png" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CIER</title>
     <link rel="stylesheet" href="https://bootswatch.com/5/lux/bootstrap.min.css">
@@ -50,6 +51,7 @@
 
                 if ($estancias->rowCount()){
                     foreach($estancias as $estancia){
+                        $index = 0;
 
                         $links = encontrarEnlacesYouTubeYFacebook($estancia['tLinksEstancias']);
 
@@ -58,15 +60,23 @@
                             <div class="card container-estancia contenido" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
                                 <div class="card-body" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
                                     <p class="card-text" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
-                                        <small class="text-body-secondary" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa"><?php echo $estancia['fCreateEstancias']; ?> - <?php echo $estancia['tCreateUsuario']; ?></small>
+                                        <small class="text-body-secondary" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa"><?php echo $estancia['fCreateEstancias']; ?> - <strong><?php echo $estancia['tCreateUsuario']; ?></strong></small>
                                     </p>
                                     <div class="card-text" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
                                         <span data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa"><?php echo $estancia['tNombreEstancias'];  if ($estancia['tProvenienciaEstancias'] != ''){echo ' - <strong>' . $estancia['tProvenienciaEstancias'] . '</strong>'; } ?></span>
-                                        <ul>
-                                            <li><strong>Fecha: </strong><?php echo $estancia['fFechaEstancias']; ?></li>
-                                            <li><strong>Proyecto: </strong><?php echo $estancia['tProyectoEstancias']; ?></li>
-                                            <li><strong>Instalaciones del <?php echo $estancia['tInstalacionesEstancias']; ?></strong></li>
-                                            <li><strong>Tipo: </strong><?php echo $estancia['tTipoEstancia']; ?></li>
+                                        <ul data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                            <li data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                                <strong data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">Fecha: </strong><?php echo $estancia['fFechaEstancias']; ?>
+                                            </li>
+                                            <li data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                                <strong data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">Proyecto: </strong><?php echo $estancia['tProyectoEstancias']; ?>
+                                            </li data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                            <li data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                                <strong data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">Instalaciones: <?php echo $estancia['tInstalacionesEstancias']; ?></strong>
+                                            </li>
+                                            <li data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
+                                                <strong data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">Tipo: </strong><?php echo $estancia['tTipoEstancia']; ?>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -81,7 +91,6 @@
                                                     <div class="carousel-inner" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
 
                                                     <?php
-                                                        $index = 0;
                                                         foreach($links as $link){
                                                             
                                                             // if (verificarFacebook(obtenerEnlaceRedSocial($link)) == true){
@@ -96,7 +105,7 @@
                                                                 if (verificarFacebook(obtenerEnlaceRedSocial($link)) == true){
                                                                     ?>
                                                                         <div class="carousel-item active" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
-                                                                            <div class="container-facebook">
+                                                                            <div class="container-facebook" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
                                                                                 <iframe class="facebook" type="text/html" src="<?php echo obtenerEnlaceRedSocial($link); ?>" frameborder="0" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa" allowfullscreen></iframe>
                                                                             </div>
                                                                         </div>
@@ -112,7 +121,7 @@
                                                                 if (verificarFacebook(obtenerEnlaceRedSocial($link)) == true){
                                                                     ?>
                                                                         <div class="carousel-item" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
-                                                                            <div class="container-facebook">
+                                                                            <div class="container-facebook" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa">
                                                                                 <iframe class="facebook" type="text/html" src="<?php echo obtenerEnlaceRedSocial($link); ?>" frameborder="0" data-estancia="<?php echo $estancia['eCodeEstancias']; ?>" data-accion="estancia_activa" allowfullscreen></iframe>
                                                                             </div>
                                                                         </div>
@@ -274,6 +283,7 @@
     <script>
         const id_user = <?php echo $_SESSION['eCodeUsuario']; ?>;
     </script>
+    <script src="https://kit.fontawesome.com/b47dcd53a4.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- <script src="https://cdn.datatables.net/v/bs5/dt-1.13.4/datatables.min.js"></script> -->
