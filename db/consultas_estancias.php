@@ -29,6 +29,8 @@
                 }else{
                     if ($consulta->consultarConfirmar("UPDATE Estancias SET bEstadoEstancias = $estado, fUpdateEstancias = CURRENT_TIMESTAMP, eUpdateEstancias = $id_user WHERE eCodeEstancias = $estancia_id")){
                         $resp = array('code' => '0', 'message' => 'La estancia se actualizo correctamente');
+                        $historial = ['accion' => 'Cambio el estado de una estancia', 'id' => $id_user];
+                        $consulta->setHistorial($historial);
                     }else{
                         if ($estado == 1){
                             $message = 'Reacivar';
@@ -138,6 +140,8 @@
                             ];
                         }
                         $resp = array('code' => '0', 'message' => 'Estancia agregada correctamente', 'datos' => $datos);
+                        $historial = ['accion' => 'Agrego una estancia', 'id' => $id_user];
+                        $consulta->setHistorial($historial);
                     }
                 }else{
                     // Eliminar los archivos nuevos previamente cargados por que no se puedo registrar la Estancia

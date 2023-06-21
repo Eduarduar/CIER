@@ -86,6 +86,8 @@
                                 ];
                             }
                             $resp = array('code' => '0', 'message' => 'Actividad agregada correctamente', 'datos' => $datos);
+                            $historial = ['accion' => 'Agrego una nueva actividad', 'id' => $id_user];
+                            $consulta->setHistorial($historial);
                         }
                     }else{
                         // Eliminar los archivos nuevos previamente cargados por que no se puedo registrar la actividad
@@ -126,6 +128,8 @@
                 }else{
                     if ($consulta->consultarConfirmar("UPDATE actividades SET bEstadoActividades = $estado, fUpdateActividades = CURRENT_TIMESTAMP, eUpdateActividades = $id_user WHERE eCodeActividades = $actividad_id")){
                         $resp = array('code' => '0', 'message' => 'La actividad se actualizo correctamente');
+                        $historial = ['accion' => 'Cambio el estado de una actividad', 'id' => $id_user];
+                        $consulta->setHistorial($historial);
                     }else{
                         if ($estado == 1){
                             $message = 'Reacivar';
