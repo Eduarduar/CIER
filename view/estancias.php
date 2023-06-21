@@ -280,6 +280,8 @@
             </div>
         </div>
 
+        <?php include '../utilities/estructuras.php'; ?>z
+
     <script>
         const id_user = <?php echo $_SESSION['eCodeUsuario']; ?>;
     </script>

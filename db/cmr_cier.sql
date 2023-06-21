@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-06-2023 a las 18:11:06
+-- Tiempo de generación: 21-06-2023 a las 17:18:59
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -53,7 +53,8 @@ INSERT INTO `actividades` (`eCodeActividades`, `tTituloActividades`, `tImgsActiv
 (10, 'nlkasjdvnlaksjdvnlkasdjv', '../src/img/O8idQNL2tf.webp,../src/img/J0V5EUrZgv.jpg,../src/img/TMPjprb93t.webp,../src/img/UZ7KtuTF76.jpg', '2023-06-18', '2023-06-19', 2, 2, 0),
 (11, 'dadas', '../src/img/GQtToOq3fl.jpg', '2023-06-18', '2023-06-19', 2, 2, 0),
 (12, 'Reportes del año', '../src/img/H3DBlWmVh2.jpg,../src/img/DhpEmItRld.jpg,../src/img/9w8g4BvTYD.jpg,../src/img/a0U7BZKUBm.jpg,../src/img/a9DXY9zLRF.jpg,../src/img/7UjbTLmhbg.jpg,../src/img/OYJTopjdJf.jpg,../src/img/7wp2Bn7pWm.jpg', '2023-06-19', '2023-06-19', 2, 2, 0),
-(13, 'fgsdbvcbvs', '../src/img/50jKa6UKvS.jpg,../src/img/Ti0m1Oa85D.jpg,../src/img/lqQnfEmNmz.jpg,../src/img/XsvlofVXmv.jpg', '2023-06-19', '2023-06-19', 2, 2, 0);
+(13, 'fgsdbvcbvs', '../src/img/50jKa6UKvS.jpg,../src/img/Ti0m1Oa85D.jpg,../src/img/lqQnfEmNmz.jpg,../src/img/XsvlofVXmv.jpg', '2023-06-19', '2023-06-19', 2, 2, 0),
+(14, 'khbkjbh', '../src/img/x05PBsymhU.jpg,../src/img/j7gBkdfYa6.jpg,../src/img/dtnuXBY35t.jpg,../src/img/USAFO8SVSw.jpg', '2023-06-20', NULL, 2, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -64,11 +65,11 @@ INSERT INTO `actividades` (`eCodeActividades`, `tTituloActividades`, `tImgsActiv
 CREATE TABLE `estancias` (
   `eCodeEstancias` int(11) NOT NULL,
   `tNombreEstancias` varchar(100) NOT NULL,
-  `tProvenienciaEstancia` varchar(100) NOT NULL,
-  `tProyectoEstancia` varchar(100) NOT NULL,
-  `fFechaEstancia` date NOT NULL DEFAULT current_timestamp(),
+  `tProvenienciaEstancias` varchar(100) NOT NULL,
+  `tProyectoEstancias` varchar(100) NOT NULL,
+  `fFechaEstancias` date NOT NULL DEFAULT current_timestamp(),
   `tInstalacionesEstancias` varchar(100) DEFAULT NULL,
-  `eTipoEstancia` int(11) NOT NULL,
+  `eTipoEstancias` int(11) NOT NULL,
   `tLinksEstancias` varchar(1000) DEFAULT NULL,
   `tImgsEstancias` varchar(1000) NOT NULL,
   `fCreateEstancias` date NOT NULL DEFAULT current_timestamp(),
@@ -82,9 +83,32 @@ CREATE TABLE `estancias` (
 -- Volcado de datos para la tabla `estancias`
 --
 
-INSERT INTO `estancias` (`eCodeEstancias`, `tNombreEstancias`, `tProvenienciaEstancia`, `tProyectoEstancia`, `fFechaEstancia`, `tInstalacionesEstancias`, `eTipoEstancia`, `tLinksEstancias`, `tImgsEstancias`, `fCreateEstancias`, `fUpdateEstancias`, `eCreateEstancias`, `eUpdateEstancias`, `bEstadoEstancias`) VALUES
-(1, '', '', '', '2023-06-19', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi tempora magnam cumque ullam ab volup', 1, 'https://www.youtube.com/watch?v=Qr4FPQxPx54&list=RDQr4FPQxPx54&start_radio=1 https://www.youtube.com/watch?v=D9G1VOjN_84&list=RDQr4FPQxPx54&index=2 https://www.youtube.com/watch?v=GQPnbH2y82o&list=RDQr4FPQxPx54&index=3 https://www.youtube.com/watch?v=X-iaGXyVOaE&list=RDQr4FPQxPx54&index=4 https://www.youtube.com/watch?v=t95ry4d56R8 https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2FYoSoyUTeM%2Fvideos%2F6243622942381449%2F&show_text=false&width=560&t=0', '../src/img/1f7y5pTsm0.png,../src/img/43t44zuiaL.jpg,../src/img/50jKa6UKvS.jpg,../src/img/6eTl6DfpEb.jpg', '2023-06-19', NULL, 2, NULL, 1),
-(2, '', '', '', '2023-06-19', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi tempora magnam cumque ullam ab volup', 2, 'https://www.youtube.com/watch?v=Qr4FPQxPx54&list=RDQr4FPQxPx54&start_radio=1 https://www.youtube.com/watch?v=D9G1VOjN_84&list=RDQr4FPQxPx54&index=2 https://www.youtube.com/watch?v=GQPnbH2y82o&list=RDQr4FPQxPx54&index=3 https://www.youtube.com/watch?v=X-iaGXyVOaE&list=RDQr4FPQxPx54&index=4 https://www.youtube.com/watch?v=t95ry4d56R8 https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2FYoSoyUTeM%2Fvideos%2F6243622942381449%2F&show_text=false&width=560&t=0', '../src/img/1f7y5pTsm0.png,../src/img/43t44zuiaL.jpg,../src/img/50jKa6UKvS.jpg,../src/img/6eTl6DfpEb.jpg', '2023-06-19', NULL, 2, NULL, 1);
+INSERT INTO `estancias` (`eCodeEstancias`, `tNombreEstancias`, `tProvenienciaEstancias`, `tProyectoEstancias`, `fFechaEstancias`, `tInstalacionesEstancias`, `eTipoEstancias`, `tLinksEstancias`, `tImgsEstancias`, `fCreateEstancias`, `fUpdateEstancias`, `eCreateEstancias`, `eUpdateEstancias`, `bEstadoEstancias`) VALUES
+(12, 'bbdfbnlskfdbnsl', 'lkjvanslkdvjna', 'valkjvnasldk', '2023-06-20', 'vlakjsdnv', 1, 'https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2FYoSoyUTeM%2Fvideos%2F1252589038980313%2F&show_text=false&width=560&t=0 https://www.youtube.com/watch?v=mWKDZRJWdF4 https://www.youtube.com/watch?v=9X7I3bW49S8', '../src/img/j5YCBSykhA.jpg,../src/img/rcidYUO5U3.jpg,../src/img/7j5rZEtcr6.jpg,../src/img/4iHNRCiBOb.jpg', '2023-06-20', '2023-06-20', 2, 2, 1),
+(19, 'nalksjvn', 'vlkasjdvn', 'vasldkjvn', '2023-06-20', 'vlkajsdn', 2, 'https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2FYoSoyUTeM%2Fvideos%2F1252589038980313%2F&show_text=false&width=560&t=0 https://www.youtube.com/watch?v=mWKDZRJWdF4 https://www.youtube.com/watch?v=9X7I3bW49S8', '../src/img/F8AI25jqOw.jpg,../src/img/b06MCWZlXQ.png,../src/img/gZRd71K2OV.jpg,../src/img/5TvyMOie2P.jpg', '2023-06-20', '2023-06-20', 2, 2, 1),
+(20, 'Eduardo Arcega Rodriguez', 'Cetis 84', 'Practicas Profecionales', '2023-06-20', 'Oficina sistemas', 1, 'https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2FYoSoyUTeM%2Fvideos%2F1252589038980313%2F&show_text=false&width=560&t=0 https://www.youtube.com/watch?v=mWKDZRJWdF4 https://www.youtube.com/watch?v=9X7I3bW49S8', '../src/img/HklQGNZv9Z.png,../src/img/z0iKLClIOY.png,../src/img/n3t7wc0YlJ.png', '2023-06-20', '2023-06-20', 2, 2, 1),
+(21, 'Eduardo Arcega Rodriguez', 'Cetis 84', 'Practicas Profecionales', '2023-06-20', 'Oficina sistemas', 2, '', '../src/img/7ZjZZaTFBc.jpg', '2023-06-20', '2023-06-20', 2, 2, 1),
+(22, 'Eduardo Arcega Rodriguez', 'Cetis 84', 'Practicas Profecionales', '2023-06-20', 'Oficina sistemas', 1, '', '../src/img/bCuBCqncG9.jpg,../src/img/xVz0DVTT5s.jpg,../src/img/FQsziKc1Yn.jpg', '2023-06-20', '2023-06-20', 2, 2, 1),
+(23, 'vavasdv', 'dsvasdv', 'vsavasdv', '2023-06-20', 'asdvasdv', 2, 'https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2FYoSoyUTeM%2Fvideos%2F1252589038980313%2F&show_text=false&width=560&t=0 https://www.youtube.com/watch?v=mWKDZRJWdF4 https://www.youtube.com/watch?v=9X7I3bW49S8', '../src/img/fHqx14V8lS.jpg', '2023-06-20', '2023-06-20', 2, 2, 1),
+(24, 'vsdvasdv', '', 'vasdva', '2023-06-20', 'vasvasdvasd', 2, '', '../src/img/CIbhDeMUfU.jpg', '2023-06-20', '2023-06-21', 2, 2, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `estructuras`
+--
+
+CREATE TABLE `estructuras` (
+  `eCodeEstructuras` int(11) NOT NULL,
+  `tNombreEstructuras` varchar(100) NOT NULL,
+  `tReglamentoEstructuras` varchar(100) NOT NULL,
+  `tPdfEstructuras` varchar(100) NOT NULL,
+  `fCreateEstructuras` date NOT NULL DEFAULT current_timestamp(),
+  `fUpdateEstructuras` time DEFAULT current_timestamp(),
+  `eCreateEstructuras` int(11) NOT NULL,
+  `eUpdateEstructuras` int(11) DEFAULT NULL,
+  `bEstadoEstructuras` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -112,7 +136,19 @@ INSERT INTO `historial` (`eCodeHistorial`, `tAccionHistorial`, `eUsuarioHistoria
 (100, 'Inicio sesión', 2, '2023-06-19'),
 (101, 'Inicio sesión', 2, '2023-06-19'),
 (102, 'Inicio sesión', 2, '2023-06-19'),
-(103, 'Inicio sesión', 2, '2023-06-20');
+(103, 'Inicio sesión', 2, '2023-06-20'),
+(104, 'Agrego una nueva publicación', 2, '2023-06-20'),
+(105, 'Inicio sesión', 2, '2023-06-20'),
+(106, 'Inicio sesión', 2, '2023-06-20'),
+(107, 'Inicio sesión', 2, '2023-06-20'),
+(108, 'Inicio sesión', 2, '2023-06-20'),
+(109, 'Inicio sesión', 2, '2023-06-20'),
+(110, 'Inicio sesión', 2, '2023-06-20'),
+(111, 'Inicio sesión', 2, '2023-06-20'),
+(112, 'Inicio sesión', 2, '2023-06-20'),
+(113, 'Inicio sesión', 2, '2023-06-20'),
+(114, 'Inicio sesión', 2, '2023-06-21'),
+(115, 'Cambio el estado de una estancia', 2, '2023-06-21');
 
 -- --------------------------------------------------------
 
@@ -132,6 +168,13 @@ CREATE TABLE `publicaciones` (
   `eUpdatePublicaciones` int(11) DEFAULT current_timestamp(),
   `bEstadoPublicaciones` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `publicaciones`
+--
+
+INSERT INTO `publicaciones` (`eCodePublicaciones`, `eUserPublicaciones`, `tMensajePublicaciones`, `tImgPublicaciones`, `tPdfPublicaciones`, `eTipoPublicaciones`, `fCreatePublicaciones`, `fUpdatePublicaciones`, `eUpdatePublicaciones`, `bEstadoPublicaciones`) VALUES
+(107, 2, 'vaskjlvnaslkdklajsvn', '../src/img/EzTz1T80d029g0w.jpeg', '../src/pdf/jNXEsiIW7MC2hGe.pdf', 1, '2023-06-20', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -240,7 +283,15 @@ ALTER TABLE `estancias`
   ADD PRIMARY KEY (`eCodeEstancias`),
   ADD KEY `eCreateEstancias` (`eCreateEstancias`),
   ADD KEY `eUpdateEstancias` (`eUpdateEstancias`),
-  ADD KEY `eTipoEstancia` (`eTipoEstancia`);
+  ADD KEY `eTipoEstancia` (`eTipoEstancias`);
+
+--
+-- Indices de la tabla `estructuras`
+--
+ALTER TABLE `estructuras`
+  ADD PRIMARY KEY (`eCodeEstructuras`),
+  ADD KEY `eCreateEstructuras` (`eCreateEstructuras`),
+  ADD KEY `eUpdateEstructuras` (`eUpdateEstructuras`);
 
 --
 -- Indices de la tabla `historial`
@@ -291,25 +342,31 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `actividades`
 --
 ALTER TABLE `actividades`
-  MODIFY `eCodeActividades` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `eCodeActividades` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `estancias`
 --
 ALTER TABLE `estancias`
-  MODIFY `eCodeEstancias` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `eCodeEstancias` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT de la tabla `estructuras`
+--
+ALTER TABLE `estructuras`
+  MODIFY `eCodeEstructuras` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `historial`
 --
 ALTER TABLE `historial`
-  MODIFY `eCodeHistorial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
+  MODIFY `eCodeHistorial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
 
 --
 -- AUTO_INCREMENT de la tabla `publicaciones`
 --
 ALTER TABLE `publicaciones`
-  MODIFY `eCodePublicaciones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
+  MODIFY `eCodePublicaciones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
@@ -352,7 +409,14 @@ ALTER TABLE `actividades`
 ALTER TABLE `estancias`
   ADD CONSTRAINT `estancias_ibfk_1` FOREIGN KEY (`eCreateEstancias`) REFERENCES `usuarios` (`eCodeUsuarios`) ON UPDATE CASCADE,
   ADD CONSTRAINT `estancias_ibfk_2` FOREIGN KEY (`eUpdateEstancias`) REFERENCES `usuarios` (`eCodeUsuarios`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `estancias_ibfk_3` FOREIGN KEY (`eTipoEstancia`) REFERENCES `tipoestancia` (`eCodeTipoEstancia`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `estancias_ibfk_3` FOREIGN KEY (`eTipoEstancias`) REFERENCES `tipoestancia` (`eCodeTipoEstancia`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `estructuras`
+--
+ALTER TABLE `estructuras`
+  ADD CONSTRAINT `estructuras_ibfk_1` FOREIGN KEY (`eCreateEstructuras`) REFERENCES `usuarios` (`eCodeUsuarios`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `estructuras_ibfk_2` FOREIGN KEY (`eUpdateEstructuras`) REFERENCES `usuarios` (`eCodeUsuarios`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `historial`

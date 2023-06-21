@@ -329,6 +329,8 @@
             </div>
         </div>
 
+        <?php include '../utilities/estructuras.php'; ?>
+
         <script>
             const id_user = <?php echo $_SESSION['eCodeUsuario']; ?>;
             document.querySelector('header button.btn-outline-success').classList.add('btn-success');

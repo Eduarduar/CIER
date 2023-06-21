@@ -2,11 +2,13 @@
 
     session_start();
 
-    if (!isset($_SESSION['eCodeUsuario']) and !isset($_SESSION['tNombreUsuario'])){
+    include '../db/consultas.php';
+
+    if (!isset($_SESSION['eCodeUsuario']) and !isset($_SESSION['tNombreUsuario']) and !isset($_SESSION['tRolUsuario'])){
         header('location: ./login');
     }
-        
-    
+
+    $consulta = new consultas();
 
 ?>
 <!DOCTYPE html>
@@ -32,8 +34,11 @@
 
     </main>
 
+    <?php include '../utilities/estructuras.php'; ?>
+
     <script src="https://kit.fontawesome.com/b47dcd53a4.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/validacion.js"></script>
     <script src="../js/header.js"></script>
     
 </body>
