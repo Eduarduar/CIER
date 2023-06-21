@@ -101,11 +101,15 @@ const crearEstancia = function(datos) {
   let imagenes = datos.imagenes.split(',');
   let links = encontrarEnlacesYouTubeYFacebook(datos.links);
   let stringEstado;
+  let activa;
   if (datos.estado == 1){
     stringEstado = 'estancia_activa';
+    activa = true;
   }else{
-    stringEstado = 'estancia_inactiva'
+    stringEstado = 'estancia_inactiva';
+    active = false
   }
+
   // Crear el elemento contenedor principal
   const containerEstancia = document.createElement('div');
   containerEstancia.classList.add('card', 'container-estancia', 'contenido');
@@ -121,7 +125,11 @@ const crearEstancia = function(datos) {
   // Agregar el elemento de texto al cuerpo de la tarjeta
   const fecha = document.createElement('p');
   fecha.classList.add('card-text');
-  fecha.innerHTML = `<small class="text-body-secondary"> ${datos.fCreate} - <strong> ${datos.eCreate} </strong> </small>`;
+  if (!activa) {
+    fecha.innerHTML = `<small class="text-body-secondary"> ${datos.fCreate} - <strong> ${datos.eCreate} </strong> [Eliminado por: ${datos.eUpdate} / ${datos.fUpdate}]</small>`;
+  }else{
+    fecha.innerHTML = `<small class="text-body-secondary"> ${datos.fCreate} - <strong> ${datos.eCreate} </strong> </small>`;
+  }
   fecha.setAttribute('data-accion', `${stringEstado}`);
   fecha.setAttribute('data-estancia', `${datos.estancia}`);
   cardBody.appendChild(fecha);
@@ -156,7 +164,7 @@ const crearEstancia = function(datos) {
   liProyecto.setAttribute('data-estancia', `${datos.estancia}`);
 
   const liInstalaciones = document.createElement('li');
-  liInstalaciones.innerHTML = `<strong>Instalaciones del ${datos.instalacion} </strong>`;
+  liInstalaciones.innerHTML = `<strong>Instalaciones: ${datos.instalacion} </strong>`;
   liInstalaciones.setAttribute('data-accion', `${stringEstado}`);
   liInstalaciones.setAttribute('data-estancia', `${datos.estancia}`);
 
@@ -171,9 +179,10 @@ const crearEstancia = function(datos) {
   ulInfo.appendChild(liTipo);
   infoElement.appendChild(ulInfo);
 
+  cardBody.append(infoElement);
+
   // Agregar el cuerpo de la tarjeta al contenedor principal
   containerEstancia.appendChild(cardBody);
-  containerEstancia.appendChild(infoElement);
 
   // Crear el contenedor de vídeos
   const videosContainer = document.createElement('div');
@@ -196,10 +205,11 @@ const crearEstancia = function(datos) {
       carruselVideosInner.setAttribute('data-estancia', `${datos.estancia}`);
     
       // Crear los elementos de los vídeos del carrusel
-      links.forEach((link, index) => {
+      let indexVideo = 0;
+      links.forEach((link) => {
           const carouselItem = document.createElement('div');
           carouselItem.classList.add('carousel-item');
-          if (index === 0) {
+          if (indexVideo === 0) {
               carouselItem.classList.add('active');
           }
           
@@ -220,8 +230,9 @@ const crearEstancia = function(datos) {
             carouselItem.appendChild(containerFacebook);
           }else{
             carouselItem.appendChild(iframe);
-            carruselVideosInner.appendChild(carouselItem);
           }
+          carruselVideosInner.appendChild(carouselItem);
+          indexVideo++;
       });
       // Crear los botones de control del carrusel de vídeos
       const prevButtonVideos = document.createElement('button');
@@ -379,23 +390,27 @@ const crearEstancia = function(datos) {
     
       // Agregar el contenedor de imágenes al contenedor principal
       containerEstancia.appendChild(imagenesContainer);
+
+      containerEstancia.addEventListener('contextmenu', (e) => {
+        activarMenuDesplegable(e);
+    });  
   }
   return containerEstancia;
 };
   
 const Estancia = {
   nombre: false, 
-  lugar: false,
+  lugar: true,
   fecha: false,
   proyecto: false,
   instalacion: false,
-  links: false
+  links: true
 };
 
 const validarEstancia = function (){
   if (Estancia.nombre && Estancia.fecha && Estancia.proyecto && Estancia.instalacion && Estancia.links){
     Estancia.nombre = validarCampo(expresiones.usuario, inputNombre.value, inputNombre.id);
-    Estancia.lugar = validarCampo(expresiones.textOpcional, inputProveniencia.value, inputProveniencia.id);
+    Estancia.lugar = validarCampo(expresiones.textNumOpcional, inputProveniencia.value, inputProveniencia.id);
     Estancia.fecha = validarCampo(expresiones.fecha, inputFecha.value, inputFecha.id);
     Estancia.proyecto = validarCampo(expresiones.usuario, inputProyecto.value, inputProyecto.id);
     Estancia.instalacion = validarCampo(expresiones.usuario, inputInstalaciones.value, inputInstalaciones.id);
@@ -420,7 +435,7 @@ const validarForm = (e) => {
       break;
 
     case 'proveniencia':
-      Estancia.lugar = validarCampo(expresiones.textOpcional, e.target.value, e.target.id);
+      Estancia.lugar = validarCampo(expresiones.textNumOpcional, e.target.value, e.target.id);
       break;
 
     case 'fecha':
@@ -472,11 +487,15 @@ const agregar = function () {
               if (respuesta.code === '0') {
                 // La operación en el servidor fue exitosa
                 contenedorEstancias.prepend(crearEstancia(respuesta.datos));
-                // (nombre, proveniencia, proyecto, Instalaciones, links, fechaProyecto, carrusel, imagenes, fechaCreate, usuarioC, usuarioA = '', FechaUPdate = '')
                 inputs.forEach((input) => {
                   input.value = '';
                   input.classList.remove('is-valid');
                 });
+                Estancia.nombre = false;
+                Estancia.lugar = false;
+                Estancia.fecha = false;
+                Estancia.proyecto = false;
+                Estancia.instalacion = false;
                 selectTipo.selectedIndex = -1;
                 document.querySelector('#agregarEstancia .modal-footer button.btn.btn-secondary').click();
               } else {
@@ -497,6 +516,66 @@ const agregar = function () {
       alert('El tipo de estancia no es valida')
     }
   }
+}
+
+const activarMenuDesplegable = function (e) {
+  e.preventDefault();
+  menuDesplegable.innerHTML = '<ul></ul>';
+      let ul = document.querySelector('#menuDesplegable ul');
+
+      // Crear elementos li
+      let liEstado = document.createElement('li');
+      
+      // Agregar texto a los elementos li
+      if (e.target.dataset.accion == 'estancia_activa'){
+          liEstado.textContent = 'Eliminar Estancia';
+      }else{
+          liEstado.textContent = 'Reactivar Estancia';
+      }
+      liEstado.setAttribute('data-estancia',`${e.target.dataset.estancia}`);
+      // Agregar elementos li a la lista
+      ul.appendChild(liEstado);
+
+      liEstado.addEventListener('click', (e2) => {
+          const formData = new FormData();
+          if (e.target.dataset.accion == 'estancia_activa'){
+              formData.append('estancia', 'eliminar');
+          }else{
+              formData.append('estancia', 'activar');
+          }
+          formData.append('estancia_id', e.target.dataset.estancia);
+          formData.append('id_user', id_user);
+          $.ajax({
+              url: '../db/consultas_estancias.php',
+              type: 'POST',
+              dataType: 'json',
+              data: formData,
+              contentType: false,
+              processData: false,
+              success: function (respuesta) {
+                  if (respuesta.code === '0') {
+                      let estancia = e.target;
+                      do {
+                          if (estancia.classList.contains('contenido')){
+                              estancias = estancia.parentNode;
+                              break;
+                          }
+                          estancia = estancia.parentNode;
+                      } while (true);
+                      estancias.removeChild(estancia);
+                  } else {
+                      // La operación en el servidor no fue exitosa
+                      alert(respuesta.message);
+                  }
+              },
+              error: function (error) {
+                  // Manejar errores en la solicitud AJAX
+                  console.log('Error en la solicitud AJAX:', error.responseText);
+          }});
+      });
+  menuDesplegable.style.display = 'block';
+  menuDesplegable.style.left = e.pageX + 'px';
+  menuDesplegable.style.top = e.pageY + 'px';
 }
 
 buttonAgregar.addEventListener('click', agregar);
@@ -533,4 +612,87 @@ inputImgs.addEventListener('change', (e) => {
   }
 });
 
+const activarEscuchadoresMenuDesplegable = function() {
+  let contenido = document.querySelectorAll('.contenido');
+  contenido.forEach((element) => {
+      element.addEventListener('contextmenu', (e) => {
+          activarMenuDesplegable(e);
+      });  
+  });
+}
+document.addEventListener('click', function() {
+  menuDesplegable.style.display = 'none';
+  menuDesplegable.innerHTML = '<ul></ul>';
+});
+
+const showEstanciasActivas = (e) => {
+  const containerEstancias = document.querySelector('.container-estancias');
+  const formData = new FormData();
+  formData.append('estancias', 'activas');
+  $.ajax({
+      url: '../db/consultas_estancias.php',
+      type: 'POST',
+      data: formData,
+      dataType: 'json',
+      contentType: false,
+      processData: false,
+      success: function (respuesta) {
+      if (respuesta.code === '0') {
+          containerEstancias.innerHTML = '';
+          respuesta.datos.forEach((estancia) => {containerEstancias.appendChild(crearEstancia(estancia));});
+          let boton = document.querySelector(' .container-buttons button.btn-outline-success');
+          let boton2 = document.querySelector('.container-buttons button.btn-outline-danger');
+          let boton3 = document.querySelector('.container-buttons button.btn-primary');
+          boton.setAttribute('style','display:none');
+          boton2.removeAttribute('style');
+          boton3.removeAttribute('disabled');
+      } else {
+          // La operación en el servidor no fue exitosa
+          alert(respuesta.message);
+      }
+      },
+      error: function (error) {
+      // Manejar errores en la solicitud AJAX
+      console.log('Error en la solicitud AJAX:', error.responseText);
+      }
+  });
+}
+
+const showEstanciasEliminadas = function () {
+  const containerEstancias = document.querySelector('.container-estancias');
+  const formData = new FormData();
+  formData.append('estancias', 'eliminadas');
+  $.ajax({
+      url: '../db/consultas_estancias.php',
+      type: 'POST',
+      data: formData,
+      dataType: 'json',
+      contentType: false,
+      processData: false,
+      success: function (respuesta) {
+        if (respuesta.code === '0') {
+          containerEstancias.innerHTML = '';
+          respuesta.datos.forEach((estancia) => {containerEstancias.appendChild(crearEstancia(estancia));});
+          let boton = document.querySelector(' .container-buttons button.btn-outline-success');
+          let boton2 = document.querySelector('.container-buttons button.btn-outline-danger');
+          let boton3 = document.querySelector('.container-buttons button.btn-primary');
+          boton2.setAttribute('style','display:none');
+          boton.removeAttribute('style');
+          boton3.setAttribute('disabled','true');
+        } else {
+          // La operación en el servidor no fue exitosa
+          alert(respuesta.message);
+        }
+      },
+      error: function (error) {
+        // Manejar errores en la solicitud AJAX
+        console.log('Error en la solicitud AJAX:', error.responseText);
+      }
+    });
+}
+
+activarEscuchadoresMenuDesplegable();
 Estancia.links = validarCampo(expresiones.links, inputLinks.value, inputLinks.id);
+
+document.querySelector('.container-buttons button.btn-outline-danger').addEventListener('click',  showEstanciasEliminadas);
+document.querySelector('.container-buttons button.btn-outline-success').addEventListener('click', showEstanciasActivas);

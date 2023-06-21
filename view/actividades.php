@@ -15,6 +15,7 @@
 <html lang="en">
 <head>
         <meta charset="UTF-8">
+        <link rel="shortcut icon" href="../img/logocier.png" type="image/x-icon">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Actividades Diversas - CIER</title>
         <link rel="stylesheet" href="https://bootswatch.com/5/lux/bootstrap.min.css">
@@ -167,6 +168,7 @@
         <script>
             const id_user = <?php echo $_SESSION['eCodeUsuario']; ?>
         </script>
+    <script src="https://kit.fontawesome.com/b47dcd53a4.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="../js/header.js"></script>
