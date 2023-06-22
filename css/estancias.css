@@ -86,32 +86,6 @@ strong {
     font-size: 14pt;
 }
 
-.menu {
-    position: absolute;
-    display: none;
-    background-color: #f1f1f1;
-    border: 1px solid #ccc;
-    padding: 8px;
-    z-index: 100;
-}
-
-.menu ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
-.menu li {
-    padding: 8px 16px;
-    cursor: pointer;
-    transition: .3s;
-}
-
-.menu li:hover {
-    background: #6e6e6e;
-    color: #fff;
-}
-
 @media only screen and (max-width: 991px) {
     .container-estancias {
         display: flex;

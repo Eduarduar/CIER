@@ -12,13 +12,31 @@
                             <a class="nav-link" aria-current="page" href="./proyectos">Proyectos</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown link
+                            <a class="nav-link dropdown-toggle contenidoHeader" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-accion="contenedor">
+                            Infraestructura
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">aaaa</a></li>
-                                <li><a class="dropdown-item" href="#">aaaa</a></li>
-                                <li><a class="dropdown-item" href="#">aaaa</a></li>
+                            <ul class="dropdown-menu contenidoHeader" data-accion="contenedor">
+                                <?php
+                                
+                                    if (isset($consulta)){
+                                        $estructuras = $consulta->consultar("SELECT e.eCodeEstructuras, e.tNombreEstructuras, e.tReglamentoEstructuras, e.tPdfEstructuras, e.fCreateEstructuras, e.fUpdateEstructuras, u1.tNombreUsuarios AS tNombreCreateEstructuras, u2.tNombreUsuarios AS tNombreUpdateEstructuras, e.bEstadoEstructuras
+                                        FROM estructuras e
+                                        JOIN usuarios u1 ON e.eCreateEstructuras = u1.eCodeUsuarios
+                                        LEFT JOIN usuarios u2 ON e.eUpdateEstructuras = u2.eCodeUsuarios
+                                        WHERE e.bEstadoEstructuras = 1;");
+                                        
+                                        if ($estructuras->rowCount()) {
+                                            foreach($estructuras as $estructura){
+                                                ?>
+
+                                                    <li data-estructura="<?php echo $estructura['eCodeEstructuras']; ?>" data-accion="estructura" data-estado="activo"><a class="dropdown-item" href="#" data-estructura="<?php echo $estructura['eCodeEstructuras']; ?>" data-accion="estructura" data-estado="activo" data-bs-toggle="modal" data-bs-target="#verEstructura"><?php echo $estructura['tNombreEstructuras']; ?></a></li>
+                                                
+                                                <?php
+                                            }
+                                        }
+                                    }
+                                
+                                ?>
                             </ul>
                         </li>
                         <li class="nav-item">
