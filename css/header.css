@@ -4,8 +4,26 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+footer {
+    flex-shrink: 0;
+}
+
 header {
     background: #272a2d;
+    min-height: 6rem !important;
 }
 
 header nav ul li a {

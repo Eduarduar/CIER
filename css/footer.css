@@ -1,0 +1,32 @@
+footer{
+    display: flex;
+    flex-wrap: wrap;
+    /* align-items: center; */
+    justify-content: space-evenly;
+    background: #303443;
+    max-width: 100%;
+    width: 100%;
+    color: #fff;
+    min-height: 80px;
+    padding: 1rem;
+}
+
+.noLink {
+    text-decoration: none;
+}
+
+footer p {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+footer a {
+    color: aqua;
+    transition: .3s;   
+}
+
+footer a:hover{ 
+    color: #f9b512;
+}

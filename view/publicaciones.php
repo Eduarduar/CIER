@@ -23,6 +23,7 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         <link rel="stylesheet" href="../css/publicaciones.css">
         <link rel="stylesheet" href="../css/header.css">
+        <link rel="stylesheet" href="../css/footer.css">
     </head>
     <body>
 
@@ -122,6 +123,8 @@
             </div>
 
         </main>
+
+        <?php include '../utilities/footer.php'; ?>
 
         <div class="modal fade" id="modal-publicar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
