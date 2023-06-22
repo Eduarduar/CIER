@@ -38,6 +38,7 @@
         <link href="https://cdn.datatables.net/v/bs5/dt-1.13.4/datatables.min.css" rel="stylesheet"/>
         <link rel="stylesheet" href="../css/usuarios.css">
         <link rel="stylesheet" href="../css/header.css">
+        <link rel="stylesheet" href="../css/footer.css">
     </head>
     <body>
 
@@ -169,6 +170,8 @@
             </div>
             
         </main>
+
+        <?php include '../utilities/footer.php'; ?>
         
         <div id="menuDesplegable" class="menu">
             <ul>

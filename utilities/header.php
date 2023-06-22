@@ -12,7 +12,7 @@
                             <a class="nav-link" aria-current="page" href="./proyectos">Proyectos</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle contenidoHeader" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-accion="contenedor">
+                            <a class="nav-link dropdown-toggle contenidoHeader" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-accion="contenedor">
                             Infraestructura
                             </a>
                             <ul class="dropdown-menu contenidoHeader" data-accion="contenedor">
