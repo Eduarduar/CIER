@@ -101,7 +101,7 @@ const activarMenuDesplegableHeader = function (e) {
             ul.appendChild(liAgregar);
             ul.appendChild(liEliminados);
             
-        }else if (e.target.dataset.accion == 'estructura'){
+        }else if (e.target.dataset.accion == 'estructura' || e.target.dataset.accion == 'estructura_tabla'){
             
             // Crear elementos li
             let liEstado = document.createElement('li');
@@ -135,14 +135,84 @@ const activarMenuDesplegableHeader = function (e) {
                     success: function (respuesta) {
                         if (respuesta.code === '0') {
                             let estructura = e.target;
-                            do {
-                                if (estructura.classList.contains('contenidoHeader')){
-                                    estructuras = estructura.parentNode;
-                                    break;
+                            let tabla = document.querySelector('#verEliminados .table tbody');
+                            if (e.target.dataset.accion == 'estructura'){
+                                do {
+                                    if (estructura.parentNode.classList.contains('contenidoHeader')){
+                                        estructuras = estructura.parentNode;
+                                        break;
+                                    }
+                                    estructura = estructura.parentNode;
+                                } while (true);
+                                estructuras.removeChild(estructura);
+                                tabla.innerHTML = '';
+                                respuesta.datos.forEach((estructura) => {
+                                    let tr = document.createElement('tr');
+                                    tr.classList.add('contenidoHeader');
+                                    tr.setAttribute('data-estructura', estructura.code);
+                                    tr.setAttribute('data-accion','estructura_tabla');
+                                    tr.setAttribute('data-estado','activo');
+                                    tr.addEventListener('contextmenu', (e) => {
+                                        activarMenuDesplegableHeader(e);
+                                    });  
+                                    Object.entries(estructura).forEach(([clave, valor]) => {
+                                        if (valor == 0){
+                                            valor = 'inactivo';
+                                        }else if (valor == null){
+                                            valor = '------';
+                                        }
+                                        
+                                        let td = document.createElement('td');
+                                        td.setAttribute('data-estructura', estructura.code);
+                                        td.setAttribute('data-accion','estructura_tabla');
+                                        td.setAttribute('data-estado','inactivo');
+                                        td.textContent = `${valor}`;
+                                        tr.appendChild(td);
+                                    });
+                                    tabla.appendChild(tr)
+                                })
+                            }else{
+                                do {
+                                    if (estructura.classList.contains('contenidoHeader')){
+                                        estructuras = estructura.parentNode;
+                                        break;
+                                    }
+                                    estructura = estructura.parentNode;
+                                } while (true);
+                                estructuras.removeChild(estructura);
+                                let ul = document.querySelector('.dropdown-menu');
+                                ul.innerHTML = '';
+                                respuesta.datos.forEach((estructura) => {
+                                    let li = document.createElement('li');
+                                    li.setAttribute('data-estructura', estructura.code);
+                                    li.setAttribute('data-accion','estructura');
+                                    li.setAttribute('data-estado','activo');
+                                    li.addEventListener('contextmenu', (e) => {
+                                        activarMenuDesplegableHeader(e);
+                                    });  
+                                    let a = document.createElement('a');
+                                    a.setAttribute('data-estructura', estructura.code);
+                                    a.setAttribute('data-accion','estructura');
+                                    a.setAttribute('data-estado','activo');
+                                    a.setAttribute('data-bs-toggle','modal');
+                                    a.setAttribute('data-bs-target','#verEstructura');
+                                    a.setAttribute('href','#');
+                                    a.addEventListener('click', mostrarInfoEstructura);
+                                    a.classList.add('dropdown-item');
+                                    a.textContent = `${estructura.nombre}`;
+                                    li.appendChild(a);
+                                    ul.appendChild(li);
+                                })
+                                if (tabla.childElementCount == 0){
+                                    let tr = document.createElement('tr');
+                                    let td = document.createElement('td');
+                                    td.textContent = 'No hay estructuras eliminadas';
+                                    td.setAttribute('colspan','7');
+                                    td.classList.add('noEstructuras');
+                                    tr.appendChild(td);
+                                    tabla.appendChild(tr);
                                 }
-                                estructura = estructura.parentNode;
-                            } while (true);
-                            estructuras.removeChild(estructura);
+                            }
                         } else {
                             // La operación en el servidor no fue exitosa
                             alert(respuesta.message);
@@ -200,6 +270,7 @@ buttonAgregarEstructura.addEventListener('click', () => {
             formData.append('nombre', inputNombreEstructura.value);
             formData.append('pdfR', inputPdfR.files[0]);
             formData.append('pdfI', inputPdfI.files[0]);
+            formData.append('id_user', id_user);
             $.ajax({
                 url: '../db/consultas_header.php',
                 type: 'POST',
@@ -226,8 +297,10 @@ buttonAgregarEstructura.addEventListener('click', () => {
                         a.setAttribute('href','#');
                         a.addEventListener('click', mostrarInfoEstructura);
                         a.classList.add('dropdown-item');
+                        a.textContent = `${respuesta.datos.nombre}`;
                         li.appendChild(a);
                         ul.appendChild(li);
+                        document.querySelector('#agregarEstructura .modal-footer button.btn.btn-secondary').click();
                     } else {
                         // La operación en el servidor no fue exitosa
                         alert(respuesta.message);
@@ -243,7 +316,6 @@ buttonAgregarEstructura.addEventListener('click', () => {
 });
 
 const verPdf = function (e) {
-    console.log(e.target.dataset.pdf)
     iframeViewPdf.setAttribute('src', `${e.target.dataset.pdf}`)
 }
 

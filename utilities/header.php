@@ -23,7 +23,7 @@
                                         FROM estructuras e
                                         JOIN usuarios u1 ON e.eCreateEstructuras = u1.eCodeUsuarios
                                         LEFT JOIN usuarios u2 ON e.eUpdateEstructuras = u2.eCodeUsuarios
-                                        WHERE e.eCodeEstructuras = 1;");
+                                        WHERE e.bEstadoEstructuras = 1;");
                                         
                                         if ($estructuras->rowCount()) {
                                             foreach($estructuras as $estructura){

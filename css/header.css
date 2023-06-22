@@ -46,7 +46,7 @@ body::-webkit-scrollbar-thumb {
     background-color: #f1f1f1;
     border: 1px solid #ccc;
     padding: 8px;
-    z-index: 1001;
+    z-index: 1056;
 }
 
 .menu ul {
@@ -70,6 +70,10 @@ body::-webkit-scrollbar-thumb {
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.noEstructuras {
+    text-align: center;
 }
 
 @media only screen and (max-width: 991px) {
